@@ -436,7 +436,7 @@ function TETRIS:HandleInput()
 end
 
 function TETRIS:NetworkState()
-    CustomNetTables:SetTableValue("game", "pending_" .. tostring(self.index), self.pendingTetraminos:Map(function (t, i)
+    CustomNetTables:SetTableValue("game_" .. tostring(self.index), "pending", self.pendingTetraminos:Map(function (t, i)
         local origin = CELL(self, i * 3 - 2, 1)
         local tetramino = TETRAMINOS[t](self, origin)
         local data = {
@@ -456,13 +456,13 @@ function TETRIS:NetworkState()
             t=self.heldTetramino,
             cells=tetramino:GetCells():Map(CELL.GetCoordinate):Items()
         }
-        CustomNetTables:SetTableValue("game", "hold_" .. tostring(self.index), data)
+        CustomNetTables:SetTableValue("game_" .. tostring(self.index), "hold", data)
     else
-        CustomNetTables:SetTableValue("game", "hold_" .. tostring(self.index), nil)
+        CustomNetTables:SetTableValue("game_" .. tostring(self.index), "hold", nil)
     end
     
-    CustomNetTables:SetTableValue("game", "score_" .. tostring(self.index), {value=self.score})
-    CustomNetTables:SetTableValue("game", "level_" .. tostring(self.index), {value=self.level})
+    CustomNetTables:SetTableValue("game_" .. tostring(self.index), "score", {value=self.score})
+    CustomNetTables:SetTableValue("game_" .. tostring(self.index), "level", {value=self.level})
 end
 
 print ("tetris.lua is loaded")

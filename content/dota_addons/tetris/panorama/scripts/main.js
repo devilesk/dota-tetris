@@ -11,68 +11,67 @@ GameUI.SetDefaultUIEnabled(DotaDefaultUIElement_t.DOTA_DEFAULT_UI_TOP_BAR_BACKGR
 keys = "abcdefghijklmnopqrstuvwxyz1234567890".split("");
 keys = keys.concat(["up","down","left","right","lshift","rshift","tab","backspace","lcontrol","rcontrol","lalt","ralt","slash","enter","backquote","backslash","space","escape","period","lbracket","rbracket","minus","equal","semicolon","apostrophe","comma","home","home","insert","delete","pageup","pagedown","end","f1","f2","f3","f4","f5","f6","f7","f8","f9","f10","f11","f12","capslock","numlock","pad_0","pad_1","pad_2","pad_3","pad_4","pad_5","pad_6","pad_7","pad_8","pad_9","pad_divide","pad_multiply","pad_enter","pad_decimal","pad_minus","pad_plus","lwin","rwin","break","scrolllock"]);
 keys.forEach(function (c) {
-    $.RegisterKeyBind($.GetContextPanel(), "key_" + c, keyPressHandler.bind(this, c));
+    $.RegisterKeyBind($.GetContextPanel(), "key_" + c, KeyPressHandler.bind(this, c));
 });
 
-function keyPressHandler(key, e) {
+function KeyPressHandler(key, e) {
     $.Msg(key, " ", e);
     GameEvents.SendCustomGameEventToServer("key_press", {key:key});
-    if (key === "enter") {
-        chatActive = true;
-        $.Msg("chat enter");
-        $("#ChatInput").SetFocus();
-    }
-    else if (key === "escape") {
-        chatActive = false;
-        $.Msg("chat enter");
-        $.GetContextPanel().SetFocus();
-    }
+    ChatInput(key);
 }
 
-var lastGhostCells = [];
-
-function OnGameNetTableChange(tableName, key, data) {
+function Tetris(parentPanel, index) {
+    var panel = $.CreatePanel("Panel", $("#center-container"), "");
+    panel.BLoadLayoutSnippet("tetris");
+    this.index = index;
+    this.panel = panel;
+    this.board = new Board(panel.FindChildTraverse("board"), 22, 10);
+    this.pending = new Board(panel.FindChildTraverse("pending"), 15, 4);
+    this.holding = new Board(panel.FindChildTraverse("holding"), 3, 4);
+    CustomNetTables.SubscribeNetTableListener("grid_" + this.index, this.OnGridNetTableChange.bind(this));
+    CustomNetTables.SubscribeNetTableListener("game_" + this.index, this.OnGameNetTableChange.bind(this));
+    this.LoadGridNetTable();
+    this.LoadGameNetTable();
+}
+Tetris.prototype.OnGridNetTableChange = function (tableName, key, data) {
+    if (tableName !== "grid_" + this.index) return;
+    var row = parseInt(key) - 1;
+    for (var i = 1; i <= 10; i++) {
+        var col = i - 1;
+        var cell = this.board.get(row, col);
+        var state = data[i];
+        cell.render(state[1], state[2]);
+    }
+}
+Tetris.prototype.OnGameNetTableChange = function (tableName, key, data) {
     $.Msg( "Table ", tableName, " changed: '", key, "' = ", data, " ", JSON.stringify(data).length);
-    if (tableName !== "game") return;
-    if (key === "pending_1") {
-        tetris.pending.clear();
+    if (tableName !== "game_" + this.index) return;
+    if (key === "pending") {
+        this.pending.clear();
         for (var i = 1; i <= 5; i++) {
             var cells = data[i].cells;
             for (var j in cells) {
-                var cell = tetris.pending.get(cells[j][1] - 1, cells[j][2] - 1);
+                var cell = this.pending.get(cells[j][1] - 1, cells[j][2] - 1);
                 cell.render(OCCUPIED, data[i].t);
             }
         }
     }
-    else if (key === "ghost_1") {
-        lastGhostCells.forEach(function (cell) {
-            cell.clearGhost();
-        });
-        lastGhostCells.length = 0;
-        for (var j in data) {
-            var cell = tetris.board.get(data[j][1] - 1, data[j][2] - 1);
-            $.Msg("RENDER GHOST", data[j][1] - 1, data[j][2] - 1);
-            cell.render(GHOST);
-            lastGhostCells.push(cell);
-        }
-    }
-    else if (key === "hold_1") {
-        tetris.holding.clear();
+    else if (key === "hold") {
+        this.holding.clear();
         var cells = data.cells;
         for (var j in cells) {
-            var cell = tetris.holding.get(cells[j][1] - 1, cells[j][2] - 1);
+            var cell = this.holding.get(cells[j][1] - 1, cells[j][2] - 1);
             cell.render(OCCUPIED, data.t);
         }
     }
-    else if (key === "score_1") {
+    else if (key === "score") {
         $("#score").text = data.value;
     }
-    else if (key === "level_1") {
+    else if (key === "level") {
         $("#level").text = data.value;
     }
 }
-
-function LoadGameNetTable() {
+Tetris.prototype.LoadGameNetTable = function () {
     $.Msg("LoadGameNetTable");
     var table = CustomNetTables.GetAllTableValues("game");
     if (table) {
@@ -81,8 +80,7 @@ function LoadGameNetTable() {
         });
     }
 }
-
-function LoadGridNetTable() {
+Tetris.prototype.LoadGridNetTable = function () {
     $.Msg("LoadGridNetTable");
     var table = CustomNetTables.GetAllTableValues("grid_1");
     if (table) {
@@ -92,35 +90,8 @@ function LoadGridNetTable() {
     }
 }
 
-function OnGridNetTableChange(tableName, key, data) {
-    // $.Msg( "Table ", tableName, " changed: '", key, "' = ", data, " ", JSON.stringify(data).length);
-    if (tableName !== "grid_1") return;
-    var row = parseInt(key) - 1;
-    for (var i = 1; i <= 10; i++) {
-        var col = i - 1;
-        var cell = tetris.board.get(row, col);
-        var state = data[i];
-        cell.render(state[1], state[2]);
-    }
-}
-
-function Tetris(parentPanel) {
-    var panel = $.CreatePanel("Panel", $("#center-container"), "");
-    panel.BLoadLayoutSnippet("tetris");
-    
-    this.panel = panel;
-    this.board = new Board(panel.FindChildTraverse("board"), 22, 10);
-    this.pending = new Board(panel.FindChildTraverse("pending"), 15, 4);
-    this.holding = new Board(panel.FindChildTraverse("holding"), 3, 4);
-}
-
 $("#center-container").RemoveAndDeleteChildren();
-var tetris = new Tetris($("#center-container"));
-
-CustomNetTables.SubscribeNetTableListener("grid_1", OnGridNetTableChange);
-CustomNetTables.SubscribeNetTableListener("game", OnGameNetTableChange);
-
-LoadGridNetTable();
-LoadGameNetTable();
+ new Tetris($("#center-container"), 1);
+ new Tetris($("#center-container"), 2);
 
 

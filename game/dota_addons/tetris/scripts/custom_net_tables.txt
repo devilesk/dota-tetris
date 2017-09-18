@@ -3,6 +3,8 @@
     custom_net_tables =
     [
         "game",
+        "game_1",
+        "game_2",
         "grid_1",
         "grid_2",
         "debug"

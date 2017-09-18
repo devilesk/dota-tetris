@@ -1,12 +1,27 @@
-var chatActive = false;
+var isChatActive = false;
+var chatEnterKey = "enter";
+var chatLeaveKey = "escape";
 
 function Update() {
-    if (!chatActive) $.GetContextPanel().SetFocus();
-    if (chatActive) $("#ChatInput").SetFocus();
-    $("#CustomChat").SetHasClass("Active", chatActive);
+    if (!isChatActive) $.GetContextPanel().SetFocus();
+    if (isChatActive) $("#ChatInput").SetFocus();
+    $("#CustomChat").SetHasClass("Active", isChatActive);
     $.Schedule(0.01, Update);
 }
 Update();
+
+function ChatInput(key) {
+    if (key === chatEnterKey) {
+        isChatActive = true;
+        $.Msg("chat enter");
+        $("#ChatInput").SetFocus();
+    }
+    else if (key === chatLeaveKey) {
+        isChatActive = false;
+        $.Msg("chat enter");
+        $.GetContextPanel().SetFocus();
+    }
+}
 
 function ChatScrollUp() {
     $.Msg("ChatScrollUp");
@@ -25,10 +40,10 @@ function ChatTextSubmitted() {
 
 function ChatFocus() {
     $.Msg("chat ChatFocus");
-    chatActive = true;
+    isChatActive = true;
 }
 
 function ChatBlur() {
     $.Msg("chat ChatBlur");
-    chatActive = false;
+    isChatActive = false;
 }
