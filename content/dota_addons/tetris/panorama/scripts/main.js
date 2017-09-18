@@ -77,10 +77,25 @@ Cell.prototype.toString = function () {
 }
 
 function Update() {
-    $.GetContextPanel().SetFocus();
+    // $.Msg("chat chatActive", chatActive);
+    if (!chatActive) $.GetContextPanel().SetFocus();
+    if (chatActive) $("#ChatInput").SetFocus();
+    $("#CustomChat").SetHasClass("Active", chatActive);
     $.Schedule(0.01, Update);
 }
+var chatActive = false;
 Update();
+// $("#CustomChat").SetFocus();
+
+function ChatScrollUp() {
+    $.Msg("ChatScrollUp");
+    $.DispatchEvent("ScrollUp", $("#ChatLinesWrapper"));
+}
+
+function ChatScrollDown() {
+    $.Msg("ChatScrollDown");
+    $.DispatchEvent("ScrollDown", $("#ChatLinesWrapper"));
+}
 
 GameUI.SetDefaultUIEnabled(DotaDefaultUIElement_t.DOTA_DEFAULT_UI_TOP_TIMEOFDAY, false);
 GameUI.SetDefaultUIEnabled(DotaDefaultUIElement_t.DOTA_DEFAULT_UI_TOP_HEROES, false);
@@ -95,15 +110,37 @@ GameUI.SetDefaultUIEnabled(DotaDefaultUIElement_t.DOTA_DEFAULT_UI_TOP_BAR_BACKGR
 keys = "abcdefghijklmnopqrstuvwxyz1234567890".split("");
 keys = keys.concat(["up","down","left","right","lshift","rshift","tab","backspace","lcontrol","rcontrol","lalt","ralt","slash","enter","backquote","backslash","space","escape","period","lbracket","rbracket","minus","equal","semicolon","apostrophe","comma","home","home","insert","delete","pageup","pagedown","end","f1","f2","f3","f4","f5","f6","f7","f8","f9","f10","f11","f12","capslock","numlock","pad_0","pad_1","pad_2","pad_3","pad_4","pad_5","pad_6","pad_7","pad_8","pad_9","pad_divide","pad_multiply","pad_enter","pad_decimal","pad_minus","pad_plus","lwin","rwin","break","scrolllock"]);
 keys.forEach(function (c) {
-    // $.Msg("binding", c);
-    // Game.CreateCustomKeyBind(c, "key_pressed_" + c);
-    // Game.AddCommand("key_pressed_" + c, keyPressHandler.bind(this, c), "", 0 );
     $.RegisterKeyBind($.GetContextPanel(), "key_" + c, keyPressHandler.bind(this, c));
 });
 
 function keyPressHandler(key, e) {
     $.Msg(key, " ", e);
     GameEvents.SendCustomGameEventToServer("key_press", {key:key});
+    if (key === "enter") {
+        chatActive = true;
+        $.Msg("chat enter");
+        $("#ChatInput").SetFocus();
+    }
+    else if (key === "escape") {
+        chatActive = false;
+        $.Msg("chat enter");
+        $.GetContextPanel().SetFocus();
+    }
+}
+
+function ChatTextSubmitted() {
+    $.Msg("chat submitted");
+    $("#ChatInput").text = "";
+}
+
+function ChatFocus() {
+    $.Msg("chat ChatFocus");
+    chatActive = true;
+}
+
+function ChatBlur() {
+    $.Msg("chat ChatBlur");
+    chatActive = false;
 }
 
 var lastGhostCells = [];

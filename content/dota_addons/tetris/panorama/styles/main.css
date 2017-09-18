@@ -16,13 +16,16 @@
 .inner-container {
     width: 100%;
     height: 1036px;
-    flow-children: right;
+    flow-children: down;
 }
 .center-container {
     vertical-align: middle;
     horizontal-align: middle;
 }
 
+.chat-container {
+    vertical-align: bottom;
+}
 .tetris-container {
     flow-children: right;
     vertical-align: middle;

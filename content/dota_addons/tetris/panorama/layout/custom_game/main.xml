@@ -1,6 +1,8 @@
 <root>
     <styles>
         <include src="file://{resources}/styles/dotastyles.css" />
+        <include src="file://{resources}/styles/chat.css" />
+        <include src="file://{resources}/styles/chat_colors.css" />
         <include src="file://{resources}/styles/main.css" />
     </styles>
     <scripts>
@@ -32,6 +34,62 @@
         </Panel>
         <Panel id="inner-container" class="inner-container" hittest="false">
             <Panel id="center-container" class="center-container" hittest="false" />
+            <!-- <DOTAChat id="LoadingScreenChat"  chatstyle="hud" class="HudChat" tabindex="auto" defaultfocus="ChatInput" hittest="true" /> -->
+            <Panel id="CustomChat" class="chat-container" hittest="false">
+                <Panel class="ChatCorePanel" hittest="false">
+                    <Panel id="ChatMainPanel" hittest="false">
+
+                        <Panel id="ChatLinesArea">
+                            <Panel id="ChatChannelArea">
+                                <Panel id="ChatLinesContainer">
+                                    <Panel id="ChatLinesWrapper">
+                                        <Panel id="ChatLinesPanel">
+                                            <!-- Contents created dynamically: -->
+                                            <!-- <Label class="ChatLine" /> -->
+                                            <Label class="ChatLine" text="[Allies] devilesk: 1" />
+                                            <Label class="ChatLine" text="[Allies] devilesk: 2" />
+                                            <Label class="ChatLine" text="[Allies] devilesk: 3" />
+                                            <Label class="ChatLine" text="[Allies] devilesk: 4" />
+                                            <Label class="ChatLine" text="[Allies] devilesk: 5" />
+                                            <Label class="ChatLine" text="[Allies] devilesk: 7" />
+                                            <Label class="ChatLine" text="[Allies] devilesk: 6" />
+                                            <Label class="ChatLine" text="[Allies] devilesk: 8" />
+                                            <Label class="ChatLine" text="[Allies] devilesk: 9" />
+                                            <Label class="ChatLine" text="[Allies] devilesk: 12" />
+                                            <Label class="ChatLine" text="[Allies] devilesk: 14" />
+                                            <Label class="ChatLine" text="[Allies] devilesk: d" />
+                                            <Label class="ChatLine" text="[Allies] devilesk: c" />
+                                            <Label class="ChatLine" text="[Allies] devilesk: b" />
+                                            <Label class="ChatLine" text="[Allies] devilesk: a" />
+                                        </Panel>
+                                    </Panel>
+                                </Panel>
+                            </Panel>
+                            <Panel id="ChatLinesOverlay" hittest="false">
+                                <Panel id="ChatTabOptions" hittest="false">
+                                    <Panel id="ChatTabOptionsContents">
+                                        <ToggleButton id="ToggleTabGlobalButton" class="ToggleOptionButton" onmouseover="UIShowTextTooltip( #DOTA_ChatTab_ToggleGlobal )" onmouseout="UIHideTextTooltip()" />
+                                        <ToggleButton id="ToggleWhispersGlobalButton" class="ToggleOptionButton" onmouseover="UIShowTextTooltip( #DOTA_ChatTab_ToggleWhispersGlobal )" onmouseout="UIHideTextTooltip()" />
+                                        <ToggleButton id="ToggleTabSoundsButton" class="ToggleOptionButton" onmouseover="UIShowTextTooltip( #DOTA_ChatTab_ToggleSounds )" onmouseout="UIHideTextTooltip()" />
+                                        <Button id="CloseTabButton" class="CloseButton" onmouseout="UIHideTextTooltip()"  />
+                                    </Panel>
+                                </Panel>
+                            </Panel>
+                        </Panel>
+
+                        <Panel id="ChatControls">
+                            <Label id="ChatTargetLabel" />
+                            <TextEntry id="ChatInput" oninputsubmit="ChatTextSubmitted()" onfocus="ChatFocus()" onblur="ChatBlur()" placeholder="#DOTA_Chat_Placeholder" maxchars="1024" />
+                            <Button class="ScrollUpButton" id="ChatScrollUpButton" onactivate="ChatScrollDown()" />
+                            <Button class="ScrollDownButton" id="ChatScrollDownButton" onactivate="ChatScrollUp()"/>
+                        </Panel>
+
+                    </Panel>
+                </Panel>
+
+                <Panel id="ChatDialogVariablePanel" hittest="false" />
+                <Label id="ChatMessageTempLabel" hittest="false" />
+            </Panel>
         </Panel>
     </Panel>
 </root>
