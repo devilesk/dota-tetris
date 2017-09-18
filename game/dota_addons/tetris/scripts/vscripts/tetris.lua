@@ -76,7 +76,6 @@ function TETRIS:GetCell(r, c)
 end
 
 function TETRIS:Spawn()
-    -- print ("Spawn")
     self.activeTetramino = TETRAMINOS[self.pendingTetraminos:Shift()](self, self.spawnOrigin)
     self.pendingTetraminos:Push(self.sourceTetraminos:Pop())
     if self.sourceTetraminos:Size() == 0 then
@@ -97,15 +96,6 @@ function TETRIS:EndGame()
         Timers:RemoveTimer(self.timer)
         self.timer = nil
     end
-end
-
-function TETRIS:Lock()
-    -- print ("Lock")
-    self.activeTetramino:Lock()
-end
-
-function TETRIS:Rotate()
-    self.activeTetramino:Rotate()
 end
 
 function TETRIS:Start()
@@ -143,9 +133,7 @@ function TETRIS:Run()
     end
     
     if self.dropped or (self.lockTime ~= nil and now - self.lockTime >= self.lockDelay) then
-        if tetramino:IsTSpin() then
-            self.tSpin = true
-        end
+        self.tSpin = tetramino:IsTSpin()
         tetramino:Lock()
         self:ClearLines()
         self:Spawn()
@@ -445,6 +433,7 @@ function TETRIS:NetworkState()
         }
         return data
     end):Items())
+    
     for k, v in ipairs(self.grid) do
         CustomNetTables:SetTableValue("grid_" .. tostring(self.index), tostring(k), imap(CELL.Serialize, v))
     end
