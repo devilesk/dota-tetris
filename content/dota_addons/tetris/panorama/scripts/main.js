@@ -20,6 +20,14 @@ function KeyPressHandler(key, e) {
     ChatInput(key);
 }
 
+function UpdatePanelFocus() {
+    if (!isChatActive) $.GetContextPanel().SetFocus();
+    if (isChatActive) $("#ChatInput").SetFocus();
+    $("#CustomChat").SetHasClass("Active", isChatActive);
+    $.Schedule(0.01, UpdatePanelFocus);
+}
+UpdatePanelFocus();
+
 function Tetris(parentPanel, index) {
     var panel = $.CreatePanel("Panel", $("#center-container"), "");
     panel.BLoadLayoutSnippet("tetris");
@@ -91,7 +99,7 @@ Tetris.prototype.LoadGridNetTable = function () {
 }
 
 $("#center-container").RemoveAndDeleteChildren();
- new Tetris($("#center-container"), 1);
- new Tetris($("#center-container"), 2);
+new Tetris($("#center-container"), 1);
+new Tetris($("#center-container"), 2);
 
 

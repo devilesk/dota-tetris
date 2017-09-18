@@ -78,6 +78,7 @@ function GameMode:InitGameMode()
     Convars:RegisterCommand("minesweeper_debug", Dynamic_Wrap(GameMode, "OnSetDebug"), "Set to 1 to turn on debug output. Set to 0 to disable.", 0)
     
     CustomGameEventManager:RegisterListener( "key_press", Dynamic_Wrap(GameMode, "OnKeyPress") )
+    CustomGameEventManager:RegisterListener( "send_chat_message", Dynamic_Wrap(GameMode, "OnSendChatMessage") )
     
     math.randomseed( RandomInt(1, 99999999) )
     math.random(); math.random(); math.random()
@@ -86,9 +87,11 @@ function GameMode:InitGameMode()
 end
 
 function GameMode:OnKeyPress(args)
-    -- print("OnKeyPress", args)
-    DeepPrintTable(args)
     GameRules.AddonTemplate.tetris:OnInput(args.key)
+end
+
+function OnSendChatMessage(args)
+    CustomGameEventManager:Send_ServerToAllClients("receive_chat_message", {message=args['message'], playerID=args['playerID']})
 end
 
 function GameMode:OnSetTimeOfDayThink()

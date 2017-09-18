@@ -47,7 +47,6 @@
                                         <Panel id="ChatLinesPanel">
                                             <!-- Contents created dynamically: -->
                                             <!-- <Label class="ChatLine" /> -->
-                                            <Label class="ChatLine" text="[Allies] devilesk: 1" />
                                         </Panel>
                                     </Panel>
                                 </Panel>
