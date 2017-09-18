@@ -21,6 +21,10 @@ function CELL:constructor(tetris, row, col, state)
     self.type = nil
 end
 
+function CELL:Translate(x, y)
+    return CELL(self.tetris, self.row - y, self.col + x, self.state)
+end
+
 function CELL:Copy()
     return CELL(self.tetris, self.row, self.col, self.state)
 end

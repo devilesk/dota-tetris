@@ -2,6 +2,34 @@ require("libraries/util")
 require("libraries/timers")
 require("libraries/list")
 
+JLSTZ_OFFSET = {
+    {{0, 0}, {-1, 0}, {-1, 1}, {0, -2}, {-1, -2}},
+    {{0, 0}, {1, 0}, {1, -1}, {0, 2}, {1, 2}},
+    {{0, 0}, {1, 0}, {1, 1}, {0, -2}, {1, -2}},
+    {{0, 0}, {-1, 0}, {-1, -1}, {0, 2}, {-1, 2}},
+}
+I_OFFSET = {
+    {{0, 0}, {-2, 0}, {1, 0}, {-2, -1}, {1, 2}},
+    {{0, 0}, {-1, 0}, {2, 0}, {-1, 2}, {2, -1}},
+    {{0, 0}, {2, 0}, {-1, 0}, {2, 1}, {-1, -2}},
+    {{0, 0}, {1, 0}, {-2, 0}, {1, -2}, {-2, 1}},
+}
+O_OFFSET = {
+    {{0, 0}},
+    {{0, 0}},
+    {{0, 0}},
+    {{0, 0}},
+}
+ROTATION_OFFSETS = {
+    I = I_OFFSET,
+    J = JLSTZ_OFFSET,
+    L = JLSTZ_OFFSET,
+    O = O_TETRAMINO,
+    S = JLSTZ_OFFSET,
+    T = JLSTZ_OFFSET,
+    Z = JLSTZ_OFFSET
+}
+
 TETRAMINO = class({})
 
 function TETRAMINO:constructor(tetris, origin, orientation)
@@ -9,6 +37,7 @@ function TETRAMINO:constructor(tetris, origin, orientation)
     self.tetris = tetris
     self.orientation = orientation or 1
     self.origin = origin:Copy()
+    self.lockTime = nil
     self.locked = false
     self.lastRotated = false
 end
@@ -42,45 +71,110 @@ function TETRAMINO:GetCells(origin, orientation)
     return cells
 end
 
+function TETRAMINO:Translate(x, y)
+    self:Clear()
+    local newOrigin = self.origin:Translate(x, y)
+    local isDown = x == 0 and y == -1
+    if self:IsValid(newOrigin) then
+        self.origin = newOrigin
+        self.kicked = false
+        self.lastRotated = false
+        if isDown then
+            self:ClearLockDelay()
+        else
+            self:ResetLockDelay()
+        end
+        self:Set()
+        return true
+    end
+    if isDown then self:StartLockDelay() end
+    self:Set()
+    return false
+end
+
+function TETRAMINO:Rotate(direction)
+    self:Clear()
+    direction = direction or 1
+    local offsets = self:GetRotationOffset()
+    local newOrientation = self:NextOrientation(direction)
+    for k, offset in ipairs(offsets) do
+        local newOrigin = self.origin:Translate(offset[1] * direction, offset[2] * direction)
+        if self:IsValid(newOrigin, newOrientation) then
+            local kicked = k > 1
+            self.origin = newOrigin
+            self.orientation = newOrientation
+            self.kicked = kicked
+            self.lastRotated = true
+            self:ResetLockDelay()
+            self:Set()
+            return true
+        end
+    end
+    self:Set()
+    return false
+end
+
+function TETRAMINO:GetRotationOffset(orientation)
+    orientation = orientation or self.orientation
+    return ROTATION_OFFSETS[self:GetType()][orientation]
+end
+
+function TETRAMINO:NextOrientation(direction)
+    direction = direction or 1
+    if direction == 1 then
+        return self.orientation % 4 + 1
+    else
+        return (self.orientation + 2) % 4 + 1
+    end
+end
+
 function TETRAMINO:RotateCW()
-    self.orientation = self.orientation % 4 + 1
+    return self:Rotate(1)
 end
 
 function TETRAMINO:RotateCCW()
-    self.orientation = (self.orientation + 2) % 4 + 1
+    return self:Rotate(-1)
 end
 
 function TETRAMINO:Up()
-    self.origin.row = self.origin.row - 1
+    return self:Translate(0, 1)
 end
 
 function TETRAMINO:Down()
-    -- print("TETRAMINO:Down")
-    self.origin.row = self.origin.row + 1
+    return self:Translate(0, -1)
 end
 
 function TETRAMINO:Left()
-    self.origin.col = self.origin.col - 1
+    return self:Translate(-1, 0)
 end
 
 function TETRAMINO:Right()
-    self.origin.col = self.origin.col + 1
+    return self:Translate(1, 0)
 end
 
 function TETRAMINO:Clear()
     self:GetCells():Each(function (cell) cell:Clear() end)
 end
 
-function TETRAMINO:ClearGhost()
-    self:GetCells():Each(function (cell) cell:ClearGhost() end)
-end
-
-function TETRAMINO:SetGhost()
-    self:GetCells():Each(function (cell) cell:SetGhost() end)
-end
-
 function TETRAMINO:Set()
     self:GetCells():Each(function (cell) cell:Set(self:GetType()) end)
+end
+
+function TETRAMINO:StartLockDelay()
+    self.locked = false
+    self.lockTime = GameRules:GetGameTime()
+end
+
+function TETRAMINO:ClearLockDelay()
+    self.locked = false
+    self.lockTime = nil
+end
+
+function TETRAMINO:ResetLockDelay()
+    self.locked = false
+    if self.lockTime ~= nil then
+        self.lockTime = GameRules:GetGameTime()
+    end
 end
 
 function TETRAMINO:Lock()
@@ -93,7 +187,7 @@ function TETRAMINO:IsLocked()
 end
 
 function TETRAMINO:IsTSpin()
-    if not self.lastRotated or self:GetType() ~= "T" then return false end
+    if self:GetType() ~= "T" or not self.lastRotated or self.kicked then return false end
     local adjCells = List()
     adjCells:Push(self:GetCell(self.origin.row, self.origin.col))
     adjCells:Push(self:GetCell(self.origin.row + 2, self.origin.col))
@@ -109,6 +203,29 @@ function TETRAMINO:IsValid(origin, orientation)
     local result = cells:All(function (cell) return cell:IsValid() and not cell:IsLocked() end)
     -- print("TETRAMINO:IsValid", result)
     return result
+end
+
+function TETRAMINO:Ghost()
+    return GHOST_TETRAMINO(self)
+end
+
+GHOST_TETRAMINO = class({}, {}, TETRAMINO)
+
+function GHOST_TETRAMINO:constructor(tetramino)
+    TETRAMINOS[tetramino:GetType()].constructor(self, tetramino.tetris, tetramino.origin, tetramino.orientation)
+    self.type = tetramino:GetType()
+end
+
+function GHOST_TETRAMINO:GetType()
+    return self.type
+end
+
+function GHOST_TETRAMINO:Clear()
+    self:GetCells():Each(function (cell) cell:ClearGhost() end)
+end
+
+function GHOST_TETRAMINO:Set()
+    self:GetCells():Each(function (cell) cell:SetGhost() end)
 end
 
 I_TETRAMINO = class({},  {

@@ -45,9 +45,8 @@ function TETRIS:constructor(index)
     self.linesToNextLevel = 0
     self.maxLevel = 10
     self.lockDelay = 0.5
-    self.time = GameRules:GetGameTime()
+    self.lastFall = GameRules:GetGameTime()
     self.score = 0
-    self.lockTime = nil
     self.dropped = false
     self.ghost = nil
     self.inputQueue = List()
@@ -84,7 +83,6 @@ function TETRIS:Spawn()
         self.sourceTetraminos = List({"I", "J", "L", "O", "S", "T", "Z"})
         self.sourceTetraminos:Shuffle()
     end
-    self.lockTime = nil
     
     if not self.activeTetramino:IsValid() then
         self:EndGame()
@@ -112,48 +110,32 @@ function TETRIS:GetDelay()
 end
 
 function TETRIS:Run()
-    -- print("TETRIS:Run")
     while self.inputQueue:Size() > 0 do
         self:HandleInput()
     end
+    
     local tetramino = self.activeTetramino
     local now = GameRules:GetGameTime()
-    if now - self.time >= self:GetDelay() then
-        self.time = now
-        tetramino:Clear()
+    
+    if now - self.lastFall >= self:GetDelay() then
+        self.lastFall = now
         tetramino:Down()
-        if not tetramino:IsValid() then
-            tetramino:Up()
-            if self.lockTime == nil then
-                self.lockTime = GameRules:GetGameTime()
-                tetramino:Set()
-            end
-        else
-            self.lockTime = nil
-            tetramino:Set()
-        end
     end
     
-    if self.dropped or (self.lockTime ~= nil and now - self.lockTime >= self.lockDelay) then
+    if self.dropped or (tetramino.lockTime ~= nil and now - tetramino.lockTime >= self.lockDelay) then
+        self.dropped = false
         self.tSpin = tetramino:IsTSpin()
         tetramino:Lock()
         self:ClearLines()
         self:Spawn()
-        self.dropped = false
         self.holdUsed = false
-    else
-        tetramino:Set()
     end
     
     if self.ghost then
-        self.ghost:ClearGhost()
+        self.ghost:Clear()
     end
-    self.ghost = tetramino:Copy()
-    while self.ghost:IsValid() do
-        self.ghost:Down()
-    end
-    self.ghost:Up()
-    self.ghost:SetGhost()
+    self.ghost = tetramino:Ghost()
+    while self.ghost:Down() do end
     
     self:CalculateScore()
     
@@ -214,116 +196,23 @@ function TETRIS:HandleInput()
     local key = self.inputQueue:Shift()
     local tetramino = self.activeTetramino
     if tetramino:IsLocked() then return end
-    tetramino:Clear()
-    if key == "up" or key == "z" then
-        -- try rotate
-        if key == "up" then
-            tetramino:RotateCW()
-        else
-            tetramino:RotateCCW()
-        end
-        if not tetramino:IsValid() then
-            tetramino.lastRotated = false
-            
-            -- try right shift
-            tetramino:Right()
-            if not tetramino:IsValid() then
-                -- try second right shift if type I
-                if tetramino:GetType() == "I" then
-                    tetramino:Right()
-                    if not tetramino:IsValid() then
-                        -- undo second right shift
-                        tetramino:Left()
-                    else
-                        if self.lockTime ~= nil then
-                            self.lockTime = GameRules:GetGameTime()
-                        end
-                        tetramino:Set()
-                        return
-                    end
-                end
-            
-                -- shift back to original position
-                tetramino:Left()
-                
-                -- try left shift
-                tetramino:Left()
-                if not tetramino:IsValid() then
-                    -- try second left shift if type I
-                    if tetramino:GetType() == "I" then
-                        tetramino:Left()
-                        if not tetramino:IsValid() then
-                            -- undo second left shift
-                            tetramino:Right()
-                        else
-                            if self.lockTime ~= nil then
-                                self.lockTime = GameRules:GetGameTime()
-                            end
-                            tetramino:Set()
-                            return
-                        end
-                    end
-                
-                    -- back to original position
-                    tetramino:Right()
-                    if key == "up" then
-                        tetramino:RotateCCW()
-                    else
-                        tetramino:RotateCW()
-                    end
-                elseif self.lockTime ~= nil then
-                    self.lockTime = GameRules:GetGameTime()
-                end
-            elseif self.lockTime ~= nil then
-                self.lockTime = GameRules:GetGameTime()
-            end
-        else
-            if self.lockTime ~= nil then
-                self.lockTime = GameRules:GetGameTime()
-            end
-            tetramino.lastRotated = true
-        end
+    if key == "up" then
+        tetramino:RotateCW()
+    elseif key == "z" then
+        tetramino:RotateCCW()
     elseif key == "down" then
-        tetramino:Down()
-        if not tetramino:IsValid() then
-            tetramino:Up()
-        else
+        if tetramino:Down() then
             self.softDropCount = self.softDropCount + 1
-            tetramino.lastRotated = false
         end
     elseif key == "left" then
         tetramino:Left()
-        if not tetramino:IsValid() then
-            tetramino:Right()
-        else
-            if self.lockTime ~= nil then
-                self.lockTime = GameRules:GetGameTime()
-            end
-            tetramino.lastRotated = false
-        end
     elseif key == "right" then
         tetramino:Right()
-        if not tetramino:IsValid() then
-            tetramino:Left()
-        else
-            if self.lockTime ~= nil then
-                self.lockTime = GameRules:GetGameTime()
-            end
-            tetramino.lastRotated = false
-        end
     elseif key == "space" then
-        while true do
-            tetramino:Down()
-            if not tetramino:IsValid() then
-                tetramino:Up()
-                break
-            else
-                self.hardDropCount = self.hardDropCount + 1
-            end
+        while tetramino:Down() do
+            self.hardDropCount = self.hardDropCount + 1
         end
-        tetramino.lastRotated = false
         self.dropped = true
-        self.lockTime = GameRules:GetGameTime()
         self.inputQueue:Clear()
     elseif key == "lshift" then
         if not self.holdUsed then
@@ -336,7 +225,6 @@ function TETRIS:HandleInput()
             return
         end
     end
-    tetramino:Set()
 end
 
 function TETRIS:NetworkState()
