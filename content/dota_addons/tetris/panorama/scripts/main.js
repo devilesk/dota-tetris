@@ -52,7 +52,7 @@ Tetris.prototype.OnGameNetTableChange = function (tableName, key, data) {
             var cells = data[i].cells;
             for (var j in cells) {
                 var cell = this.pending.get(cells[j][1] - 1, cells[j][2] - 1);
-                cell.render(OCCUPIED, data[i].t);
+                cell.render(Cell.OCCUPIED, data[i].t);
             }
         }
     }
@@ -61,7 +61,7 @@ Tetris.prototype.OnGameNetTableChange = function (tableName, key, data) {
         var cells = data.cells;
         for (var j in cells) {
             var cell = this.holding.get(cells[j][1] - 1, cells[j][2] - 1);
-            cell.render(OCCUPIED, data.t);
+            cell.render(Cell.OCCUPIED, data.t);
         }
     }
     else if (key === "score") {

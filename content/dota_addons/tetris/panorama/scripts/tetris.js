@@ -1,18 +1,3 @@
-var TYPES = "IJLOSTZ".split("");
-var INVALID = -1;
-var EMPTY = 0;
-var OCCUPIED = 1;
-var LOCKED = 2;
-var GHOST = 3;
-
-/**
- * Returns a random integer between min (inclusive) and max (inclusive)
- * Using Math.round() will give you a non-uniform distribution!
- */
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 function Board(panel, rows, columns) {
     this.panel = panel;
     this.rows = rows;
@@ -52,9 +37,16 @@ function Cell(board, parentPanel, r, c) {
     this.panel = $.CreatePanel("Panel", parentPanel, this.row + "-" + this.col);
     this.panel.AddClass("cell");
 }
+Cell.TYPES = "IJLOSTZ".split("");
+Cell.INVALID = -1;
+Cell.EMPTY = 0;
+Cell.OCCUPIED = 1;
+Cell.LOCKED = 2;
+Cell.GHOST = 3;
+
 Cell.prototype.clear = function () {
     var self = this;
-    TYPES.forEach(function (t) {
+    Cell.TYPES.forEach(function (t) {
         self.panel.SetHasClass(t, false);
     });
     this.panel.SetHasClass("locked", false);
@@ -65,10 +57,10 @@ Cell.prototype.clearGhost = function () {
 }
 Cell.prototype.render = function (state, type) {
     this.panel.SetHasClass("border", this.row < 2);
-    this.panel.SetHasClass("locked", state === LOCKED);
-    this.panel.SetHasClass("ghost", state === GHOST);
+    this.panel.SetHasClass("locked", state === Cell.LOCKED);
+    this.panel.SetHasClass("ghost", state === Cell.GHOST);
     var self = this;
-    TYPES.forEach(function (t) {
+    Cell.TYPES.forEach(function (t) {
         self.panel.SetHasClass(t, t === type);
     });
 }
