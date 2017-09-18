@@ -6,6 +6,8 @@
         <include src="file://{resources}/styles/main.css" />
     </styles>
     <scripts>
+        <include src="file://{resources}/scripts/chat.js" />
+        <include src="file://{resources}/scripts/tetris.js" />
         <include src="file://{resources}/scripts/main.js" />
     </scripts>
     <snippets>
