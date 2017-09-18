@@ -1,0 +1,37 @@
+<root>
+    <styles>
+        <include src="file://{resources}/styles/dotastyles.css" />
+        <include src="file://{resources}/styles/main.css" />
+    </styles>
+    <scripts>
+        <include src="file://{resources}/scripts/main.js" />
+    </scripts>
+    <snippets>
+        <snippet name="tetris">
+            <Panel class="tetris-container">
+                <Panel class="column">
+                    <Label id="hold-label" text="#hold" />
+                    <Panel id="holding" class="grid" />
+                    <Label id="score-label" text="#score" />
+                    <Label id="score" />
+                    <Label id="level-label" text="#level" />
+                    <Label id="level" />
+                </Panel>
+                <Panel id="board" class="grid" />
+                <Panel class="column">
+                    <Label id="pending-label" text="#next" />
+                    <Panel id="pending" class="grid" />
+                </Panel>
+            </Panel>
+        </snippet>
+    </snippets>
+    <Panel class="container" hittest="false">
+        <Panel class="controls-container" hittest="false">
+            <Button id="DashboardButton" hittest="false">
+            </Button>
+        </Panel>
+        <Panel id="inner-container" class="inner-container" hittest="false">
+            <Panel id="center-container" class="center-container" hittest="false" />
+        </Panel>
+    </Panel>
+</root>

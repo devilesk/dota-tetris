@@ -1,0 +1,161 @@
+@define CELL_SIZE: 36px;
+@define BORDER: 2px solid #454545;
+
+
+.container {
+    width: 1920px;
+    height: 1080px;
+    flow-children: down;
+    background-color: gradient( linear, 0% 0%, 0% 100%, from( #588c46), to( #1f3b08));
+    
+}
+.controls-container {
+    flow-children: right-wrap;
+    margin-left: 8px;
+}
+.inner-container {
+    width: 100%;
+    height: 1036px;
+    flow-children: right;
+}
+.center-container {
+    vertical-align: middle;
+    horizontal-align: middle;
+}
+
+.tetris-container {
+    flow-children: right;
+    vertical-align: middle;
+    horizontal-align: middle;
+    background-color: #ababab;
+    padding: 10px;
+    border: BORDER;
+    border-top-color: white;
+    border-left-color: white;
+}
+.column {
+    flow-children: down;
+    height: 100%;
+}
+.grid {
+    flow-children: down;
+    border: BORDER;
+    horizontal-align: middle;
+}
+Label {
+    color: black;
+    font-size: 30px;
+    font-family: "Comic Sans MS";
+}
+#pending, #holding {
+}
+#board {
+    margin: 0 CELL_SIZE;
+}
+.row {
+    flow-children: right;
+}
+.cell {
+    width: CELL_SIZE;
+    height: CELL_SIZE;
+    background-color: #ababab;
+}
+#board .cell {
+    border: BORDER;
+    border: 2px solid #757575;
+}
+.cell.ghost {
+    background-color: #656565;
+}
+#board .border {
+    background-color: black;
+    visibility: collapse;
+}
+#board .I,
+#board .J,
+#board .L,
+#board .O,
+#board .S,
+#board .T,
+#board .Z {
+    /* saturation: 0.95; */
+    border: 3px solid #454545;
+    border-top-color: white;
+    border-left-color: white;
+}
+
+.grid .I,
+.grid .J,
+.grid .L,
+.grid .O,
+.grid .S,
+.grid .T,
+.grid .Z {
+    border: BORDER;
+    border-width: 3px;
+    border-top-color: white;
+    border-left-color: white;
+}
+
+.I {
+    background-color: cyan;
+}
+.J {
+    background-color: blue;
+}
+.L {
+    background-color: orange;
+}
+.O {
+    background-color: yellow;
+}
+.S {
+    background-color: green;
+}
+.T {
+    background-color: purple;
+}
+.Z {
+    background-color: red;
+}
+#board .locked {
+    saturation: 1;
+    border: 3px solid #757575;
+    border-top-color: white;
+    border-left-color: white;
+}
+
+.btn:active {
+    border-top-color: #757575;
+    border-left-color: #757575;
+    
+    border-bottom-color: white;
+    border-right-color: white;
+}
+.btn Panel {
+    width: 100%;
+    height: 100%;
+}
+#DashboardButton:hover {
+    opacity: 1;
+}
+#DashboardButton {
+    background-image: url("s2r://panorama/images/control_icons/return_to_game_png.vtex");
+    transform: scaleY(-1);
+    tooltip-position: bottom;
+    width: 30px;
+    height: 30px;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    margin-left: 8px;
+    margin-right: 8px;
+    vertical-align: middle;
+    horizontal-align: middle;
+    background-position: center;
+    opacity: 0.5;
+    wash-color: #CDF;
+    transition-property: opacity;
+    transition-duration: 0.2s;
+}
