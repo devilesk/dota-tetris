@@ -42,12 +42,14 @@ function Tetris(parentPanel, index) {
     this.LoadGameNetTable();
 }
 Tetris.prototype.OnGridNetTableChange = function (tableName, key, data) {
+    $.Msg("OnGridNetTableChange", tableName, key, data);
     if (tableName !== "grid_" + this.index) return;
     var row = parseInt(key) - 1;
     for (var i = 1; i <= 10; i++) {
         var col = i - 1;
         var cell = this.board.get(row, col);
         var state = data[i];
+        $.Msg("OnGridNetTableChange cell", row, col, state[1], state[2]);
         cell.render(state[1], state[2]);
     }
 }
@@ -83,8 +85,9 @@ Tetris.prototype.LoadGameNetTable = function () {
     $.Msg("LoadGameNetTable");
     var table = CustomNetTables.GetAllTableValues("game");
     if (table) {
+        var self = this;
         table.forEach(function (kv) {
-            OnGameNetTableChange("game", kv.key, kv.value);
+            self.OnGameNetTableChange("game_" + self.index, kv.key, kv.value);
         });
     }
 }
@@ -92,14 +95,15 @@ Tetris.prototype.LoadGridNetTable = function () {
     $.Msg("LoadGridNetTable");
     var table = CustomNetTables.GetAllTableValues("grid_1");
     if (table) {
+        var self = this;
         table.forEach(function (kv) {
-            OnGridNetTableChange("grid_1", kv.key, kv.value);
+            self.OnGridNetTableChange("grid_" + self.index, kv.key, kv.value);
         });
     }
 }
 
 $("#center-container").RemoveAndDeleteChildren();
 new Tetris($("#center-container"), 1);
-new Tetris($("#center-container"), 2);
+// new Tetris($("#center-container"), 2);
 
 

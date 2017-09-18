@@ -24,7 +24,7 @@ ROTATION_OFFSETS = {
     I = I_OFFSET,
     J = JLSTZ_OFFSET,
     L = JLSTZ_OFFSET,
-    O = O_TETRAMINO,
+    O = O_OFFSET,
     S = JLSTZ_OFFSET,
     T = JLSTZ_OFFSET,
     Z = JLSTZ_OFFSET
@@ -54,11 +54,17 @@ function TETRAMINO:GetCell(r, c)
     return self.tetris:GetCell(r, c)
 end
 
+function TETRAMINO:GetState(orientation)
+    -- print ("TETRAMINO GetState")
+    orientation = orientation or self.orientation
+    return self.STATE[orientation]
+end
+
 function TETRAMINO:GetCells(origin, orientation)
     -- print ("TETRAMINO GetCells")
     origin = origin or self.origin
     orientation = orientation or self.orientation
-    local state = self.STATE[orientation]
+    local state = self:GetState(orientation)
     local cells = List()
     for r, row in ipairs(state) do
         for c, v in ipairs(row) do
@@ -116,6 +122,7 @@ end
 
 function TETRAMINO:GetRotationOffset(orientation)
     orientation = orientation or self.orientation
+    print("GetRotationOffset", self:GetType(), orientation)
     return ROTATION_OFFSETS[self:GetType()][orientation]
 end
 
@@ -162,7 +169,9 @@ end
 
 function TETRAMINO:StartLockDelay()
     self.locked = false
-    self.lockTime = GameRules:GetGameTime()
+    if self.lockTime == nil then
+        self.lockTime = GameRules:GetGameTime()
+    end
 end
 
 function TETRAMINO:ClearLockDelay()
@@ -212,12 +221,19 @@ end
 GHOST_TETRAMINO = class({}, {}, TETRAMINO)
 
 function GHOST_TETRAMINO:constructor(tetramino)
+    -- print("GHOST_TETRAMINO constructor")
     TETRAMINOS[tetramino:GetType()].constructor(self, tetramino.tetris, tetramino.origin, tetramino.orientation)
     self.type = tetramino:GetType()
 end
 
 function GHOST_TETRAMINO:GetType()
     return self.type
+end
+
+function GHOST_TETRAMINO:GetState(orientation)
+    -- print ("GHOST_TETRAMINO GetState")
+    orientation = orientation or self.orientation
+    return TETRAMINOS[self.type].STATE[orientation]
 end
 
 function GHOST_TETRAMINO:Clear()

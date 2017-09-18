@@ -61,6 +61,7 @@ Cell.prototype.render = function (state, type) {
     this.panel.SetHasClass("ghost", state === Cell.GHOST);
     var self = this;
     Cell.TYPES.forEach(function (t) {
+        $.Msg("render", t, type);
         self.panel.SetHasClass(t, t === type);
     });
 }

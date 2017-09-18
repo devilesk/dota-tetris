@@ -221,6 +221,7 @@ function TETRIS:HandleInput()
                 self.pendingTetraminos:Unshift(self.heldTetramino)
             end
             self.heldTetramino = tetramino:GetType()
+            tetramino:Clear()
             self:Spawn()
             return
         end
