@@ -90,7 +90,9 @@ function GameMode:OnKeyPress(args)
     GameRules.AddonTemplate.tetris:OnInput(args.key)
 end
 
-function OnSendChatMessage(args)
+function GameMode:OnSendChatMessage(args)
+    print("OnSendChatMessage")
+    DeepPrintTable(args)
     CustomGameEventManager:Send_ServerToAllClients("receive_chat_message", {message=args['message'], playerID=args['playerID']})
 end
 
