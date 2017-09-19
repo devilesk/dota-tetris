@@ -1,4 +1,5 @@
 @define CELL_SIZE: 36px;
+@define SMALL_CELL_SIZE: 24px;
 @define BORDER: 2px solid #454545;
 
 
@@ -21,6 +22,7 @@
 .center-container {
     vertical-align: middle;
     horizontal-align: middle;
+    flow-children: right;
 }
 
 .chat-container {
@@ -55,6 +57,10 @@ Label {
 #board {
     margin: 0 CELL_SIZE;
 }
+.AspectRatio4x3 #board, 
+.AspectRatio5x4 #board {
+    margin: 0 SMALL_CELL_SIZE;
+}
 .row {
     flow-children: right;
 }
@@ -62,6 +68,11 @@ Label {
     width: CELL_SIZE;
     height: CELL_SIZE;
     background-color: #ababab;
+}
+.AspectRatio4x3 .cell,
+.AspectRatio5x4 .cell {
+    width: SMALL_CELL_SIZE;
+    height: SMALL_CELL_SIZE;
 }
 #board .cell {
     border: BORDER;
