@@ -18,7 +18,8 @@ if GameMode == nil then
 end
 
 function Precache(context)
-    PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_techies.vsndevts", context )
+    PrecacheResource("soundfile", "soundevents/soundevents_dota_ui.vsndevts", context)
+    PrecacheResource("soundfile", "soundevents/game_sounds_ui_imported.vsndevts", context)
 end
 
 -- Create the game mode when we activate

@@ -126,6 +126,7 @@ function TETRIS:Run()
         self.dropped = false
         self.tSpin = tetramino:IsTSpin()
         tetramino:Lock()
+        EmitGlobalSound("General.SelectAction")
         self:ClearLines()
         self:Spawn()
         self.holdUsed = false
@@ -202,6 +203,7 @@ function TETRIS:HandleInput()
         tetramino:RotateCCW()
     elseif key == "down" then
         if tetramino:Down() then
+            EmitGlobalSound("Shop.PanelDown")
             self.softDropCount = self.softDropCount + 1
         end
     elseif key == "left" then
@@ -210,6 +212,7 @@ function TETRIS:HandleInput()
         tetramino:Right()
     elseif key == "space" then
         while tetramino:Down() do
+            EmitGlobalSound("ui_chat_msg_rec")
             self.hardDropCount = self.hardDropCount + 1
         end
         self.dropped = true

@@ -71,11 +71,17 @@ function TETRIS:CalculateScore()
         Notifications:TopToAll({text="+" .. tostring(value), duration=0.5})
     end
 
+    if self.linesCleared > 0 then 
+        EmitGlobalSound("ui.crafting_gem_applied")
+        print("SOUND")
+    end
+    
     self.linesToNextLevel = self.linesToNextLevel + self.linesCleared
     if self.linesToNextLevel >= self.linesPerLevel then
         self.linesToNextLevel = self.linesToNextLevel - self.linesPerLevel
         self.level = math.min(self.maxLevel, self.level + 1)
         Notifications:TopToAll({text="#level_up", duration=1})
+        EmitGlobalSound("General.FemaleLevelUp")
     end
     
     self.softDropCount = 0
