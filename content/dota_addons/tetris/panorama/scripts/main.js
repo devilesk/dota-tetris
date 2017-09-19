@@ -42,19 +42,19 @@ function Tetris(parentPanel, index) {
     this.LoadGameNetTable();
 }
 Tetris.prototype.OnGridNetTableChange = function (tableName, key, data) {
-    $.Msg("OnGridNetTableChange", tableName, key, data);
+    // $.Msg("OnGridNetTableChange", tableName, key, data);
     if (tableName !== "grid_" + this.index) return;
     var row = parseInt(key) - 1;
     for (var i = 1; i <= 10; i++) {
         var col = i - 1;
         var cell = this.board.get(row, col);
         var state = data[i];
-        $.Msg("OnGridNetTableChange cell", row, col, state[1], state[2]);
+        // $.Msg("OnGridNetTableChange cell", row, col, state[1], state[2]);
         cell.render(state[1], state[2]);
     }
 }
 Tetris.prototype.OnGameNetTableChange = function (tableName, key, data) {
-    $.Msg( "Table ", tableName, " changed: '", key, "' = ", data, " ", JSON.stringify(data).length);
+    // $.Msg( "Table ", tableName, " changed: '", key, "' = ", data, " ", JSON.stringify(data).length);
     if (tableName !== "game_" + this.index) return;
     if (key === "pending") {
         this.pending.clear();
@@ -82,7 +82,7 @@ Tetris.prototype.OnGameNetTableChange = function (tableName, key, data) {
     }
 }
 Tetris.prototype.LoadGameNetTable = function () {
-    $.Msg("LoadGameNetTable");
+    // $.Msg("LoadGameNetTable");
     var table = CustomNetTables.GetAllTableValues("game");
     if (table) {
         var self = this;
