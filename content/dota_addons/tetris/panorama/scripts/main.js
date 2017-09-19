@@ -104,6 +104,6 @@ Tetris.prototype.LoadGridNetTable = function () {
 
 $("#center-container").RemoveAndDeleteChildren();
 new Tetris($("#center-container"), 1);
-// new Tetris($("#center-container"), 2);
+new Tetris($("#center-container"), 2);
 
 
