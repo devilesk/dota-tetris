@@ -1,6 +1,7 @@
 var isChatActive = false;
 var chatEnterKey = "enter";
 var chatLeaveKey = "escape";
+var currentPlayerId = Players.GetLocalPlayer();
 
 function ChatInput(key) {
     if (key === chatEnterKey) {
@@ -24,7 +25,7 @@ function ChatScrollDown() {
 function ChatTextSubmitted() {
     $.Msg("chat submitted");
     if ($("#ChatInput").text != "") {
-        GameEvents.SendCustomGameEventToServer("chat_message", {
+        GameEvents.SendCustomGameEventToServer("send_chat_message", {
             "message": $("#ChatInput").text,
             "playerID": currentPlayerId
         });
