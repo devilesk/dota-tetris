@@ -148,7 +148,7 @@ function TETRIS:ClearLines()
     while r >= 1 do
         if self:IsLineFull(r) then
             self:ClearLine(r)
-            self:ShiftLines(r)
+            self:ShiftLinesDown(r)
             self.linesCleared = self.linesCleared + 1
         else
             r = r - 1
@@ -171,13 +171,19 @@ function TETRIS:ClearLine(r)
     end
 end
 
-function TETRIS:ShiftLines(start_row)
+function TETRIS:ShiftLinesDown(start_row)
     for r = start_row, 2, -1 do
-        self:ShiftLine(r)
+        self:ShiftLineDown(r)
     end
 end
 
-function TETRIS:ShiftLine(r)
+function TETRIS:ShiftLinesUp(end_row)
+    for r = 2, end_row, 1 do
+        self:ShiftLineUp(r, 1)
+    end
+end
+
+function TETRIS:ShiftLineDown(r)
     local rowA = self.grid[r]
     local rowB = self.grid[r - 1]
     for c, cellA in ipairs(rowA) do
@@ -187,6 +193,24 @@ function TETRIS:ShiftLine(r)
         end
     end
     self:ClearLine(r - 1)
+end
+
+function TETRIS:ShiftLineUp(r)
+    local rowA = self.grid[r - 1]
+    local rowB = self.grid[r]
+    for c, cellA in ipairs(rowA) do
+        local cellB = rowB[c]
+        cellA:Merge(cellB.type)
+    end
+    self:ClearLine(r)
+end
+
+function TETRIS:AddLine()
+    self:ShiftLinesUp(self.rows)
+    local row = self.grid[self.rows]
+    for c, cell in ipairs(row) do
+        cell:Lock()
+    end
 end
 
 function TETRIS:OnInput(key)

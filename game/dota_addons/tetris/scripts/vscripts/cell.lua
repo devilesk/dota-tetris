@@ -21,6 +21,14 @@ function CELL:constructor(tetris, row, col, state)
     self.type = nil
 end
 
+function CELL:Merge(cell)
+    self.tetris = cell.tetris
+    self.row = cell.row
+    self.col = cell.col
+    self.state = cell.state
+    self.type = cell.type
+end
+
 function CELL:Translate(x, y)
     return CELL(self.tetris, self.row - y, self.col + x, self.state)
 end
