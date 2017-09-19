@@ -92,8 +92,8 @@ Tetris.prototype.LoadGameNetTable = function () {
     }
 }
 Tetris.prototype.LoadGridNetTable = function () {
-    $.Msg("LoadGridNetTable");
-    var table = CustomNetTables.GetAllTableValues("grid_1");
+    // $.Msg("LoadGridNetTable");
+    var table = CustomNetTables.GetAllTableValues("grid_" + this.index);
     if (table) {
         var self = this;
         table.forEach(function (kv) {
