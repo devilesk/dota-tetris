@@ -37,8 +37,10 @@ function TETRAMINO:constructor(tetris, origin, orientation)
     self.tetris = tetris
     self.orientation = orientation or 1
     self.origin = origin:Copy()
+    self.lockCount = 0
     self.lockTime = nil
     self.locked = false
+    self.kicked = false
     self.lastRotated = false
 end
 
@@ -81,21 +83,23 @@ function TETRAMINO:Translate(x, y)
     self:Clear()
     local newOrigin = self.origin:Translate(x, y)
     local isDown = x == 0 and y == -1
+    local isUp = y > 0
     if self:IsValid(newOrigin) then
         self.origin = newOrigin
         self.kicked = false
         self.lastRotated = false
-        if isDown then
-            self:ClearLockDelay()
-        else
-            self:ResetLockDelay()
-        end
         self:Set()
         return true
     end
-    if isDown then self:StartLockDelay() end
     self:Set()
     return false
+end
+
+function TETRAMINO:CanDown()
+    self:Clear()
+    local result = self:IsValid(self.origin:Translate(0, -1))
+    self:Set()
+    return result
 end
 
 function TETRAMINO:Rotate(direction)
@@ -111,7 +115,7 @@ function TETRAMINO:Rotate(direction)
             self.orientation = newOrientation
             self.kicked = kicked
             self.lastRotated = true
-            self:ResetLockDelay()
+            self:RenewLockDelay()
             self:Set()
             return true
         end
@@ -122,7 +126,7 @@ end
 
 function TETRAMINO:GetRotationOffset(orientation)
     orientation = orientation or self.orientation
-    print("GetRotationOffset", self:GetType(), orientation)
+    -- print("GetRotationOffset", self:GetType(), orientation)
     return ROTATION_OFFSETS[self:GetType()][orientation]
 end
 
@@ -148,15 +152,25 @@ function TETRAMINO:Up()
 end
 
 function TETRAMINO:Down()
-    return self:Translate(0, -1)
+    local result = self:Translate(0, -1)
+    if result then
+        self:StopLockDelay()
+    else
+        self:StartLockDelay()
+    end
+    return result
 end
 
 function TETRAMINO:Left()
-    return self:Translate(-1, 0)
+    local result = self:Translate(-1, 0)
+    if result then self:RenewLockDelay() end
+    return result
 end
 
 function TETRAMINO:Right()
-    return self:Translate(1, 0)
+    local result = self:Translate(1, 0)
+    if result then self:RenewLockDelay() end
+    return result
 end
 
 function TETRAMINO:Clear()
@@ -170,19 +184,23 @@ end
 function TETRAMINO:StartLockDelay()
     self.locked = false
     if self.lockTime == nil then
+        print("StartLockDelay", self.lockCount)
         self.lockTime = GameRules:GetGameTime()
+        self.lockCount = 0
     end
 end
 
-function TETRAMINO:ClearLockDelay()
+function TETRAMINO:StopLockDelay()
+    print("StopLockDelay", self.lockCount)
     self.locked = false
     self.lockTime = nil
 end
 
-function TETRAMINO:ResetLockDelay()
+function TETRAMINO:RenewLockDelay()
     self.locked = false
     if self.lockTime ~= nil then
         self.lockTime = GameRules:GetGameTime()
+        self.lockCount = self.lockCount + 1
     end
 end
 

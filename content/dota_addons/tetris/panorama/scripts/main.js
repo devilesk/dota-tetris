@@ -15,7 +15,7 @@ keys.forEach(function (c) {
 });
 
 function KeyPressHandler(key, e) {
-    $.Msg(key, " ", e);
+    // $.Msg(key, " ", e);
     GameEvents.SendCustomGameEventToServer("key_press", {key:key});
     ChatInput(key);
 }

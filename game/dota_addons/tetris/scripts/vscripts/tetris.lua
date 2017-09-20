@@ -44,6 +44,7 @@ function TETRIS:constructor(index)
     self.linesPerLevel = 10
     self.linesToNextLevel = 0
     self.maxLevel = 10
+    self.maxLockCount = 15
     self.lockDelay = 0.5
     self.lastFall = GameRules:GetGameTime()
     self.score = 0
@@ -122,7 +123,7 @@ function TETRIS:Run()
         tetramino:Down()
     end
     
-    if self.dropped or (tetramino.lockTime ~= nil and now - tetramino.lockTime >= self.lockDelay) then
+    if self.dropped or (tetramino.lockTime ~= nil and now - tetramino.lockTime >= self.lockDelay) or (tetramino.lockCount >= self.maxLockCount and not tetramino:CanDown()) then
         self.dropped = false
         self.tSpin = tetramino:IsTSpin()
         tetramino:Lock()
