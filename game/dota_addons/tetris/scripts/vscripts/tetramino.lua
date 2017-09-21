@@ -39,6 +39,7 @@ function TETRAMINO:constructor(tetris, origin, orientation)
     self.origin = origin:Copy()
     self.lockCount = 0
     self.lockTime = nil
+    self.lowestLevel = origin.row
     self.locked = false
     self.kicked = false
     self.lastRotated = false
@@ -153,6 +154,10 @@ end
 
 function TETRAMINO:Down()
     local result = self:Translate(0, -1)
+    if self.origin.row > self.lowestLevel then
+        self.lockCount = 0
+        self.lowestLevel = self.origin.row
+    end
     if result then
         self:StopLockDelay()
     else
@@ -184,14 +189,11 @@ end
 function TETRAMINO:StartLockDelay()
     self.locked = false
     if self.lockTime == nil then
-        print("StartLockDelay", self.lockCount)
         self.lockTime = GameRules:GetGameTime()
-        self.lockCount = 0
     end
 end
 
 function TETRAMINO:StopLockDelay()
-    print("StopLockDelay", self.lockCount)
     self.locked = false
     self.lockTime = nil
 end
