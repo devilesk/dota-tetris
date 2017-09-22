@@ -41,12 +41,11 @@ function TETRIS:constructor(index)
     
     self.activeTetramino = nil
     self.timer = nil
-    self.gravity = 0.05
     self.level = 1
     self.linesCleared = 0
     self.linesPerLevel = 10
     self.linesToNextLevel = 0
-    self.maxLevel = 10
+    self.maxLevel = 15
     self.maxLockCount = 15
     self.lockDelay = 0.5
     self.lastFall = GameRules:GetGameTime()
@@ -111,7 +110,7 @@ function TETRIS:Start()
 end
 
 function TETRIS:GetDelay()
-    return (self.maxLevel + 1 - self.level) * self.gravity
+    return math.pow(0.8 - (self.level - 1) * 0.007, self.level - 1)
 end
 
 function TETRIS:Run()
