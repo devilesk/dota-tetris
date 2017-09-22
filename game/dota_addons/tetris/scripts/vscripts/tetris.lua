@@ -15,7 +15,10 @@ TETRIS = class({}, {
         TSPIN = 5,
         TSPIN_SINGLE = 6,
         TSPIN_DOUBLE = 7,
-        TSPIN_TRIPLE = 8
+        TSPIN_TRIPLE = 8,
+        TSPIN_MINI = 9,
+        TSPIN_MINI_SINGLE = 10,
+        TSPIN_MINI_DOUBLE = 11,
     }
 })
 
@@ -62,6 +65,7 @@ function TETRIS:constructor(index)
     self.pendingTetraminos:Push(self.sourceTetraminos:Pop())
     
     self.tSpin = false
+    self.tSpinMini = false
     self.lastAction = nil
     self.softDropCount = 0
     self.hardDropCount = 0
@@ -126,6 +130,7 @@ function TETRIS:Run()
     if self.dropped or (tetramino.lockTime ~= nil and now - tetramino.lockTime >= self.lockDelay) or (tetramino.lockCount >= self.maxLockCount and not tetramino:CanDown()) then
         self.dropped = false
         self.tSpin = tetramino:IsTSpin()
+        self.tSpinMini = tetramino:IsTSpinMini()
         tetramino:Lock()
         EmitGlobalSound("General.SelectAction")
         self:ClearLines()

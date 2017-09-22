@@ -215,14 +215,21 @@ function TETRAMINO:IsLocked()
     return self.locked
 end
 
-function TETRAMINO:IsTSpin()
-    if self:GetType() ~= "T" or not self.lastRotated or self.kicked then return false end
+function TETRAMINO:TCornerCount()
     local adjCells = List()
     adjCells:Push(self:GetCell(self.origin.row, self.origin.col))
     adjCells:Push(self:GetCell(self.origin.row + 2, self.origin.col))
     adjCells:Push(self:GetCell(self.origin.row + 2, self.origin.col + 2))
     adjCells:Push(self:GetCell(self.origin.row, self.origin.col + 2))
-    return adjCells:Count(function (cell) return cell:IsLocked() end) == 3
+    return adjCells:Count(function (cell) return cell:IsLocked() or not cell:IsValid() end)
+end
+
+function TETRAMINO:IsTSpin()
+    return self:GetType() == "T" and self.lastRotated and self:TCornerCount() >= 3 and not self.kicked
+end
+
+function TETRAMINO:IsTSpinMini()
+    return self:GetType() == "T" and self.lastRotated and self:TCornerCount() >= 3 and self.kicked
 end
 
 function TETRAMINO:IsValid(origin, orientation)
