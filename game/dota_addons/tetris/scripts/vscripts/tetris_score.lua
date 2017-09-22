@@ -98,9 +98,14 @@ function TETRIS:CalculateScore()
         Notifications:TopToAll({text="+" .. tostring(value), duration=0.5})
     end
 
-    if self.linesCleared > 0 then 
+    if self.linesCleared > 0 then
         EmitGlobalSound("ui.crafting_gem_applied")
         print("SOUND")
+    
+        if self.lineClearCombo > 1 then
+            self.score = self.score + 50 * (self.lineClearCombo - 1) * self.level
+            Notifications:TopToAll({text="x" .. tostring(self.lineClearCombo - 1), duration=0.5})
+        end
     end
     
     self.linesToNextLevel = self.linesToNextLevel + self.linesCleared

@@ -45,6 +45,7 @@ function TETRIS:constructor(index)
     self.linesCleared = 0
     self.linesPerLevel = 10
     self.linesToNextLevel = 0
+    self.lineClearCombo = 0
     self.maxLevel = 15
     self.maxLockCount = 15
     self.lockDelay = 0.5
@@ -135,6 +136,12 @@ function TETRIS:Run()
         self:ClearLines()
         self:Spawn()
         self.holdUsed = false
+        
+        if self.linesCleared > 0 then
+            self.lineClearCombo = self.lineClearCombo + 1
+        else
+            self.lineClearCombo = 0
+        end
     end
     
     if self.ghost then
