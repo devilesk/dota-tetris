@@ -17,13 +17,13 @@ keys.forEach(function (c) {
 function KeyPressHandler(key, e) {
     // $.Msg(key, " ", e);
     GameEvents.SendCustomGameEventToServer("key_press", {key:key});
-    ChatInput(key);
+    // ChatInput(key);
 }
 
 function UpdatePanelFocus() {
     if (!isChatActive) $.GetContextPanel().SetFocus();
-    if (isChatActive) $("#ChatInput").SetFocus();
-    $("#CustomChat").SetHasClass("Active", isChatActive);
+    // if (isChatActive) $("#ChatInput").SetFocus();
+    // $("#CustomChat").SetHasClass("Active", isChatActive);
     $.Schedule(0.01, UpdatePanelFocus);
 }
 UpdatePanelFocus();

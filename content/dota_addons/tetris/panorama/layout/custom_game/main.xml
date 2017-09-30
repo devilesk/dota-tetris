@@ -36,7 +36,7 @@
         </Panel>
         <Panel id="inner-container" class="inner-container" hittest="false">
             <Panel id="center-container" class="center-container" hittest="false" />
-            <Panel id="CustomChat" class="chat-container" hittest="false">
+            <!--<Panel id="CustomChat" class="chat-container" hittest="false">
                 <Panel class="ChatCorePanel" hittest="false">
                     <Panel id="ChatMainPanel" hittest="false">
 
@@ -45,8 +45,6 @@
                                 <Panel id="ChatLinesContainer">
                                     <Panel id="ChatLinesWrapper">
                                         <Panel id="ChatLinesPanel">
-                                            <!-- Contents created dynamically: -->
-                                            <!-- <Label class="ChatLine" /> -->
                                         </Panel>
                                     </Panel>
                                 </Panel>
@@ -72,7 +70,7 @@
 
                 <Panel id="ChatDialogVariablePanel" hittest="false" />
                 <Label id="ChatMessageTempLabel" hittest="false" />
-            </Panel>
+            </Panel>-->
         </Panel>
     </Panel>
 </root>
