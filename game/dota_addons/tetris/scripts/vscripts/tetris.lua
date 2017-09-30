@@ -19,6 +19,11 @@ TETRIS = class({}, {
         TSPIN_MINI = 9,
         TSPIN_MINI_SINGLE = 10,
         TSPIN_MINI_DOUBLE = 11,
+    },
+    GAMEMODE = {
+        MARATHON = "MARATHON",
+        SPRINT = "SPRINT",
+        ULTRA = "ULTRA",
     }
 })
 
@@ -39,9 +44,16 @@ function TETRIS:constructor(index)
         table.insert(self.grid, row)
     end
     
+    self.gameMode = TETRIS.GAMEMODE.MARATHON
+    
+    self:Setup()
+end
+
+function TETRIS:Setup()
     self.activeTetramino = nil
     self.timer = nil
     self.level = 1
+    self.linesClearedTotal = 0
     self.linesCleared = 0
     self.linesPerLevel = 10
     self.linesToNextLevel = 0
@@ -49,6 +61,9 @@ function TETRIS:constructor(index)
     self.maxLevel = 15
     self.maxLockCount = 15
     self.lockDelay = 0.5
+    self.time = nil
+    self.startTime = nil
+    self.endTime = nil
     self.lastFall = GameRules:GetGameTime()
     self.score = 0
     self.dropped = false
@@ -57,6 +72,8 @@ function TETRIS:constructor(index)
     self.heldTetramino = nil
     self.holdUsed = false
     self.sourceTetraminos = List({"I", "J", "L", "O", "S", "T", "Z"})
+    self.sourceTetraminos:Shuffle()
+    -- self.sourceTetraminos = List({"T", "O", "O", "I", "I", "J", "Z", "Z", "Z", "I", "I", "L", "I", "I"})
     self.pendingTetraminos = List()
     self.pendingTetraminos:Push(self.sourceTetraminos:Pop())
     self.pendingTetraminos:Push(self.sourceTetraminos:Pop())
@@ -104,6 +121,10 @@ function TETRIS:EndGame()
 end
 
 function TETRIS:Start()
+    self.startTime = GameRules:GetGameTime()
+    if self.gameMode == TETRIS.GAMEMODE.ULTRA then
+        self.endTime = self.startTime + 120
+    end
     self.timer = Timers:CreateTimer(function ()
         self:Run()
         return 0.01
@@ -111,7 +132,11 @@ function TETRIS:Start()
 end
 
 function TETRIS:GetDelay()
-    return math.pow(0.8 - (self.level - 1) * 0.007, self.level - 1)
+    if self.gameMode == TETRIS.GAMEMODE.MARATHON then
+        return math.pow(0.8 - (self.level - 1) * 0.007, self.level - 1)
+    else
+        return 1
+    end
 end
 
 function TETRIS:Run()
@@ -151,6 +176,19 @@ function TETRIS:Run()
     while self.ghost:Down() do end
     
     self:CalculateScore()
+    
+    self.time = now - self.startTime
+    if self.gameMode == TETRIS.GAMEMODE.SPRINT then
+        if self.linesClearedTotal >= 40 then
+            self:EndGame()
+        end
+    elseif self.gameMode == TETRIS.GAMEMODE.ULTRA then
+        self.time = self.endTime - now
+        if self.time <= 0 then
+            self.time = 0
+            self:EndGame()
+        end
+    end
     
     self:NetworkState()
 end
@@ -296,6 +334,11 @@ function TETRIS:NetworkState()
     
     CustomNetTables:SetTableValue("game_" .. tostring(self.index), "score", {value=self.score})
     CustomNetTables:SetTableValue("game_" .. tostring(self.index), "level", {value=self.level})
+    CustomNetTables:SetTableValue("game_" .. tostring(self.index), "linesClearedTotal", {value=self.linesClearedTotal})
+    
+    CustomNetTables:SetTableValue("game_" .. tostring(self.index), "time", {value=self.time})
+    
+    CustomNetTables:SetTableValue("game_" .. tostring(self.index), "gameMode", {value=self.gameMode})
 end
 
 print ("tetris.lua is loaded")

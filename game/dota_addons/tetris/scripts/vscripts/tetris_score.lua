@@ -120,5 +120,6 @@ function TETRIS:CalculateScore()
     self.hardDropCount = 0
     self.tSpin = false
     self.tSpinMini = false
+    self.linesClearedTotal = self.linesClearedTotal + self.linesCleared
     self.linesCleared = 0
 end

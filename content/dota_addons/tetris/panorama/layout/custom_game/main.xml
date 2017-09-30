@@ -14,12 +14,17 @@
         <snippet name="tetris">
             <Panel class="tetris-container">
                 <Panel class="column">
+                    <Label id="game-mode" />
                     <Label id="hold-label" text="#hold" />
                     <Panel id="holding" class="grid" />
                     <Label id="score-label" text="#score" />
                     <Label id="score" />
                     <Label id="level-label" text="#level" />
                     <Label id="level" />
+                    <Label id="lines-cleared-label" text="#lines_cleared" />
+                    <Label id="lines-cleared" />
+                    <Label id="time-label" text="#time" />
+                    <Label id="time" />
                 </Panel>
                 <Panel id="board" class="grid" />
                 <Panel class="column">

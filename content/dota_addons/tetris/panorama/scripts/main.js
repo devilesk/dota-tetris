@@ -15,7 +15,6 @@ keys.forEach(function (c) {
 });
 
 function KeyPressHandler(key, e) {
-    // $.Msg(key, " ", e);
     GameEvents.SendCustomGameEventToServer("key_press", {key:key});
     // ChatInput(key);
 }
@@ -27,6 +26,22 @@ function UpdatePanelFocus() {
     $.Schedule(0.01, UpdatePanelFocus);
 }
 UpdatePanelFocus();
+
+function pad(num, size, ch) {
+    ch = ch || "0";
+    var s = num + "";
+    while (s.length < size) s = ch + s;
+    return s;
+}
+
+function formatTime(t) {
+    if (t < 3600) {
+        return " " + pad(Math.floor(t / 60), 2) + ":" + pad(Math.floor(t) % 60, 2);
+    }
+    else {
+        return pad(Math.floor(t / 3600), 2) + ":" + pad(Math.floor((t % 3600) / 60), 2) + ":" + pad(Math.floor(t) % 60, 2);
+    }
+}
 
 function Tetris(parentPanel, index) {
     var panel = $.CreatePanel("Panel", $("#center-container"), "");
@@ -80,10 +95,19 @@ Tetris.prototype.OnGameNetTableChange = function (tableName, key, data) {
     else if (key === "level") {
         $("#level").text = data.value;
     }
+    else if (key === "linesClearedTotal") {
+        $("#lines-cleared").text = data.value;
+    }
+    else if (key === "time") {
+        $("#time").text = formatTime(data.value);
+    }
+    else if (key === "gameMode") {
+        $("#game-mode").text = $.Localize("#game_mode_" + data.value);
+    }
 }
 Tetris.prototype.LoadGameNetTable = function () {
     // $.Msg("LoadGameNetTable");
-    var table = CustomNetTables.GetAllTableValues("game");
+    var table = CustomNetTables.GetAllTableValues("game_" + this.index);
     if (table) {
         var self = this;
         table.forEach(function (kv) {
