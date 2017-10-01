@@ -55,7 +55,7 @@ function Tetris(parentPanel, index) {
     this.panel = panel;
     this.board = new Board(panel.FindChildTraverse("board"), 22, 10);
     this.pending = new Board(panel.FindChildTraverse("pending"), 15, 4);
-    this.holding = new Board(panel.FindChildTraverse("holding"), 3, 4);
+    this.holding = new Board(panel.FindChildTraverse("holding"), 2, 4);
     CustomNetTables.SubscribeNetTableListener("grid_" + this.index, this.OnGridNetTableChange.bind(this));
     CustomNetTables.SubscribeNetTableListener("game_" + this.index, this.OnGameNetTableChange.bind(this));
     this.LoadGridNetTable();
