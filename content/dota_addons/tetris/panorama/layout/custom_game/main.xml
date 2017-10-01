@@ -40,6 +40,9 @@
             <Button id="btn-new-game" class="btn" hittest="true" onactivate="NewGamePrompt()">
                 <Label text="#new_game" />
             </Button>
+            <Button id="btn-hotkeys" class="btn" hittest="true" onactivate="HotkeyPrompt()">
+                <Label text="#hotkeys" />
+            </Button>
         </Panel>
         <Panel id="inner-container" class="inner-container" hittest="false">
             <Panel id="center-container" class="center-container" hittest="false" />

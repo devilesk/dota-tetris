@@ -2,7 +2,9 @@
 {
 	"LoadingScreenDescriptionText"                  "Tetris"
 	"new_game"                                      "New Game"
+	"hotkeys"                                       "Hotkeys"
 	"cancel"                                        "Cancel"
+	"close"                                         "Close"
     "hold"                                          "Hold"
     "next"                                          "Next"
     "level"                                         "Level"

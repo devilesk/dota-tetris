@@ -141,6 +141,158 @@ function NewGame(gameMode) {
     });
 }
 
+function HotkeyPrompt() {
+    new DialogLibrary.Dialog({
+        parentPanel: DialogLibrary.contextPanel,
+        id: "dialog-container",
+        hittest: true,
+        children: [{
+            id: "contents-container",
+            cssClasses: ["contents-container"],
+            style: {
+                width: 400
+            },
+            children: [
+                {
+                    cssClasses: ["control"],
+                    id: "control-1",
+                    children: [{
+                        panelType: "Panel",
+                        init: function() {
+                        },
+                        cssClasses: ["horizontal-center"],
+                        children: [{
+                            cssClasses: [],
+                            panelType: "Label",
+                            init: function() {
+                                this.text("Up Arrow - Rotate Clockwise");
+                            },
+                            skipBindHandlers: true
+                        }]
+                    }]
+                },
+                {
+                    cssClasses: ["control"],
+                    id: "control-2",
+                    children: [{
+                        panelType: "Panel",
+                        init: function() {
+                        },
+                        cssClasses: ["horizontal-center"],
+                        children: [{
+                            cssClasses: [],
+                            panelType: "Label",
+                            init: function() {
+                                this.text("Z - Rotate Counter-Clockwise");
+                            },
+                            skipBindHandlers: true
+                        }]
+                    }]
+                },
+                {
+                    cssClasses: ["control"],
+                    id: "control-3",
+                    children: [{
+                        panelType: "Panel",
+                        init: function() {
+                        },
+                        cssClasses: ["horizontal-center"],
+                        children: [{
+                            cssClasses: [],
+                            panelType: "Label",
+                            init: function() {
+                                this.text("Down Arrow - Soft Drop");
+                            },
+                            skipBindHandlers: true
+                        }]
+                    }]
+                },
+                {
+                    cssClasses: ["control"],
+                    id: "control-4",
+                    children: [{
+                        panelType: "Panel",
+                        init: function() {
+                        },
+                        cssClasses: ["horizontal-center"],
+                        children: [{
+                            cssClasses: [],
+                            panelType: "Label",
+                            init: function() {
+                                this.text("Space - Hard Drop");
+                            },
+                            skipBindHandlers: true
+                        }]
+                    }]
+                },
+                {
+                    cssClasses: ["control"],
+                    id: "control-5",
+                    children: [{
+                        panelType: "Panel",
+                        init: function() {
+                        },
+                        cssClasses: ["horizontal-center"],
+                        children: [{
+                            cssClasses: [],
+                            panelType: "Label",
+                            init: function() {
+                                this.text("Left Shift - Hold/Swap Piece");
+                            },
+                            skipBindHandlers: true
+                        }]
+                    }]
+                },
+                {
+                    cssClasses: ["control"],
+                    id: "control-6",
+                    children: [{
+                        panelType: "Panel",
+                        init: function() {
+                        },
+                        cssClasses: ["horizontal-center"],
+                        children: [{
+                            cssClasses: [],
+                            panelType: "Label",
+                            init: function() {
+                                this.text("Left/Right Arrow - Move Left/Right");
+                            },
+                            skipBindHandlers: true
+                        }]
+                    }]
+                },
+                {
+                    cssClasses: ["control", "horizontal-center"],
+                    id: "control-7",
+                    children: [{
+                        events: {
+                            OnActivate: function() {
+                                this.root.close();
+                            },
+                            OnTabForward: function() {
+                                this.root.focusNextInput(this);
+                            }
+                        },
+                        panelType: "Button",
+                        init: function() {
+                            this.root.controls.push(this);
+                        },
+                        cssClasses: ["btn"],
+                        children: [{
+                            cssClasses: [],
+                            panelType: "Label",
+                            init: function() {
+                                this.text($.Localize("close"));
+                            },
+                            skipBindHandlers: true
+                        }]
+                    }]
+                }
+            ]
+        }]
+    });
+}
+
 function NewGamePrompt() {
     new DialogLibrary.Dialog({
         parentPanel: DialogLibrary.contextPanel,
