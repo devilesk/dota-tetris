@@ -14,21 +14,31 @@
         <snippet name="tetris">
             <Panel class="tetris-container">
                 <Panel class="column">
-                    <Label id="game-mode" />
-                    <Label id="hold-label" text="#hold" />
-                    <Panel id="holding" class="grid" />
-                    <Label id="score-label" text="#score" />
-                    <Label id="score" />
-                    <Label id="level-label" text="#level" />
-                    <Label id="level" />
-                    <Label id="lines-cleared-label" text="#lines_cleared" />
-                    <Label id="lines-cleared" />
-                    <Label id="time-label" text="#time" />
-                    <Label id="time" />
+                    <Label id="game-mode" class="header" />
+                    <Panel class="group">
+                        <Label id="hold-label" class="label" text="#hold" />
+                        <Panel id="holding" class="grid" />
+                    </Panel>
+                    <Panel class="group">
+                        <Label id="score-label" class="label" text="#score" />
+                        <Label id="score" class="label-value" />
+                    </Panel>
+                    <Panel class="group">
+                        <Label id="level-label" class="label" text="#level" />
+                        <Label id="level" class="label-value" />
+                    </Panel>
+                    <Panel class="group">
+                        <Label id="lines-cleared-label" class="label" text="#lines_cleared" />
+                        <Label id="lines-cleared" class="label-value" />
+                    </Panel>
+                    <Panel class="group">
+                        <Label id="time-label" class="label" text="#time" />
+                        <Label id="time" class="label-value" />
+                    </Panel>
                 </Panel>
                 <Panel id="board" class="grid" />
                 <Panel class="column">
-                    <Label id="pending-label" text="#next" />
+                    <Label id="pending-label" class="label" text="#next" />
                     <Panel id="pending" class="grid" />
                 </Panel>
             </Panel>

@@ -47,10 +47,37 @@
     border: BORDER;
     horizontal-align: middle;
 }
+#holding.grid,
+#pending.grid {
+    horizontal-align: left;
+    padding: 10px;
+}
 Label {
     color: black;
+}
+.label {
+    font-family: Radiance;
+    font-size: 20px;
+}
+.label-value {
+    font-family: Arial;
+    font-size: 26px;
+    font-weight: bold;
+}
+#game-mode {
+    font-weight: bold;
+}
+#pending-label {
+    text-align: right;
+    width: 100%;
+}
+.header {
     font-size: 30px;
-    font-family: "Comic Sans MS";
+    font-family: Goudy Trajan Medium;
+}
+.group {
+    margin-top: 12px;
+    flow-children: down;
 }
 #pending, #holding {
 }
