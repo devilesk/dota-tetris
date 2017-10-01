@@ -1,0 +1,11 @@
+<root>
+    <styles>
+        <include src="file://{resources}/styles/dotastyles.css" />
+        <include src="file://{resources}/styles/dialog.css" />
+    </styles>
+    <scripts>
+        <include src="file://{resources}/scripts/dialog.js" />
+    </scripts>
+    <Panel class="container" hittest="false">
+    </Panel>
+</root>

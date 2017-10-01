@@ -55,7 +55,6 @@ function GameMode:OnGameRulesStateChange()
     elseif nNewState == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
         DebugPrint("DOTA_GAMERULES_STATE_GAME_IN_PROGRESS")
         local tetris = TETRIS(1)
-        tetris:Start()
         GameRules.AddonTemplate.tetris = tetris
     end
 end
@@ -79,12 +78,17 @@ function GameMode:InitGameMode()
     Convars:RegisterCommand("minesweeper_debug", Dynamic_Wrap(GameMode, "OnSetDebug"), "Set to 1 to turn on debug output. Set to 0 to disable.", 0)
     
     CustomGameEventManager:RegisterListener( "key_press", Dynamic_Wrap(GameMode, "OnKeyPress") )
+    CustomGameEventManager:RegisterListener( "new_game", Dynamic_Wrap(GameMode, "OnNewGame") )
     CustomGameEventManager:RegisterListener( "send_chat_message", Dynamic_Wrap(GameMode, "OnSendChatMessage") )
     
     math.randomseed( RandomInt(1, 99999999) )
     math.random(); math.random(); math.random()
   
     GameRules:GetGameModeEntity():SetThink( "OnSetTimeOfDayThink", self, "SetTimeOfDay", 2 )
+end
+
+function GameMode:OnNewGame(args)
+    GameRules.AddonTemplate.tetris:PreStart(args.gameMode)
 end
 
 function GameMode:OnKeyPress(args)

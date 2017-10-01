@@ -43,13 +43,16 @@ function TETRIS:constructor(index)
         end
         table.insert(self.grid, row)
     end
-    
-    self.gameMode = TETRIS.GAMEMODE.MARATHON
-    
     self:Setup()
 end
 
-function TETRIS:Setup()
+function TETRIS:Setup(gameMode)
+    for r = 1, self.rows do
+        for c = 1, self.cols do
+            self.grid[r][c]:Clear()
+        end
+    end
+    self.gameMode = gameMode or TETRIS.GAMEMODE.MARATHON
     self.activeTetramino = nil
     self.timer = nil
     self.level = 1
@@ -61,6 +64,9 @@ function TETRIS:Setup()
     self.maxLevel = 15
     self.maxLockCount = 15
     self.lockDelay = 0.5
+    self.started = false
+    self.startCountdown = nil
+    self.startTimer = nil
     self.time = nil
     self.startTime = nil
     self.endTime = nil
@@ -86,8 +92,12 @@ function TETRIS:Setup()
     self.lastAction = nil
     self.softDropCount = 0
     self.hardDropCount = 0
-    
+    self:ClearTimers()
     self:Spawn()
+    if self.gameMode == TETRIS.GAMEMODE.ULTRA then
+        self.time = 120
+    end
+    self:NetworkState()
 end
 
 function TETRIS:GetCell(r, c)
@@ -112,22 +122,49 @@ function TETRIS:Spawn()
 end
 
 function TETRIS:EndGame()
-    print("EndGame")
-    Notifications:TopToAll({text="#game_over", duration=1})
+    Notifications:TopToAll({text="#game_over", duration=5})
+    self:ClearTimers()
+end
+
+
+
+function TETRIS:ClearTimers()
+    self.started = false
+    if self.startTimer ~= nil then
+        Timers:RemoveTimer(self.startTimer)
+        self.startTimer = nil
+    end
     if self.timer ~= nil then
         Timers:RemoveTimer(self.timer)
         self.timer = nil
     end
 end
 
+function TETRIS:PreStart(gameMode)
+    self:Setup(gameMode)
+    self.startCountdown = 3
+    self.startTimer = Timers:CreateTimer(1, function ()
+        if self.startCountdown > 0 then
+            Notifications:TopToAll({text=tostring(self.startCountdown), duration=1})
+            self.startCountdown = self.startCountdown - 1
+            return 1
+        else
+            self:Start()
+        end
+    end, self)
+end
+
 function TETRIS:Start()
+    self.started = true
     self.startTime = GameRules:GetGameTime()
     if self.gameMode == TETRIS.GAMEMODE.ULTRA then
         self.endTime = self.startTime + 120
     end
     self.timer = Timers:CreateTimer(function ()
-        self:Run()
-        return 0.01
+        if self.started then
+            self:Run()
+            return 0.01
+        end
     end, self)
 end
 

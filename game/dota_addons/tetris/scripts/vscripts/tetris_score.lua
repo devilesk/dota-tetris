@@ -100,7 +100,6 @@ function TETRIS:CalculateScore()
 
     if self.linesCleared > 0 then
         EmitGlobalSound("ui.crafting_gem_applied")
-        print("SOUND")
     
         if self.lineClearCombo > 1 then
             self.score = self.score + 50 * (self.lineClearCombo - 1) * self.level

@@ -1,3 +1,5 @@
+var DialogLibrary = GameUI.CustomUIConfig().DialogLibrary;
+
 GameUI.SetDefaultUIEnabled(DotaDefaultUIElement_t.DOTA_DEFAULT_UI_TOP_TIMEOFDAY, false);
 GameUI.SetDefaultUIEnabled(DotaDefaultUIElement_t.DOTA_DEFAULT_UI_TOP_HEROES, false);
 GameUI.SetDefaultUIEnabled(DotaDefaultUIElement_t.DOTA_DEFAULT_UI_FLYOUT_SCOREBOARD, false);
@@ -35,6 +37,7 @@ function pad(num, size, ch) {
 }
 
 function formatTime(t) {
+    if (t == null) return "00:00";
     if (t < 3600) {
         return " " + pad(Math.floor(t / 60), 2) + ":" + pad(Math.floor(t) % 60, 2);
     }
@@ -130,4 +133,154 @@ $("#center-container").RemoveAndDeleteChildren();
 new Tetris($("#center-container"), 1);
 // new Tetris($("#center-container"), 2);
 
+function NewGame(gameMode) {
+    GameEvents.SendCustomGameEventToServer("new_game", {
+        "gameMode": gameMode
+    });
+}
 
+function NewGamePrompt() {
+    new DialogLibrary.Dialog({
+        parentPanel: DialogLibrary.contextPanel,
+        id: "dialog-container",
+        hittest: true,
+        children: [{
+            id: "contents-container",
+            cssClasses: ["contents-container"],
+            style: {
+                width: 400
+            },
+            children: [
+                {
+                    cssClasses: ["control"],
+                    id: "control-1",
+                    children: [{
+                        panelType: "Panel",
+                        init: function() {
+                        },
+                        cssClasses: ["horizontal-center"],
+                        children: [{
+                            cssClasses: [],
+                            panelType: "Label",
+                            init: function() {
+                                this.text($.Localize("game_mode_prompt"));
+                            },
+                            skipBindHandlers: true
+                        }]
+                    }]
+                },
+                {
+                    cssClasses: ["control", "horizontal-center"],
+                    id: "control-2",
+                    children: [{
+                        events: {
+                            OnActivate: function() {
+                                NewGame("MARATHON");
+                                this.root.close();
+                            },
+                            OnTabForward: function() {
+                                this.root.focusNextInput(this);
+                            }
+                        },
+                        panelType: "Button",
+                        init: function() {
+                            this.root.controls.push(this);
+                        },
+                        cssClasses: ["btn"],
+                        children: [{
+                            cssClasses: [],
+                            panelType: "Label",
+                            init: function() {
+                                this.text($.Localize("game_mode_MARATHON"));
+                            },
+                            skipBindHandlers: true
+                        }]
+                    }]
+                },
+                {
+                    cssClasses: ["control", "horizontal-center"],
+                    id: "control-3",
+                    children: [{
+                        events: {
+                            OnActivate: function() {
+                                NewGame("SPRINT");
+                                this.root.close();
+                            },
+                            OnTabForward: function() {
+                                this.root.focusNextInput(this);
+                            }
+                        },
+                        panelType: "Button",
+                        init: function() {
+                            this.root.controls.push(this);
+                        },
+                        cssClasses: ["btn"],
+                        children: [{
+                            cssClasses: [],
+                            panelType: "Label",
+                            init: function() {
+                                this.text($.Localize("game_mode_SPRINT"));
+                            },
+                            skipBindHandlers: true
+                        }]
+                    }]
+                },
+                {
+                    cssClasses: ["control", "horizontal-center"],
+                    id: "control-4",
+                    children: [{
+                        events: {
+                            OnActivate: function() {
+                                NewGame("ULTRA");
+                                this.root.close();
+                            },
+                            OnTabForward: function() {
+                                this.root.focusNextInput(this);
+                            }
+                        },
+                        panelType: "Button",
+                        init: function() {
+                            this.root.controls.push(this);
+                        },
+                        cssClasses: ["btn"],
+                        children: [{
+                            cssClasses: [],
+                            panelType: "Label",
+                            init: function() {
+                                this.text($.Localize("game_mode_ULTRA"));
+                            },
+                            skipBindHandlers: true
+                        }]
+                    }]
+                },
+                {
+                    cssClasses: ["control", "horizontal-center"],
+                    id: "control-4",
+                    children: [{
+                        events: {
+                            OnActivate: function() {
+                                this.root.close();
+                            },
+                            OnTabForward: function() {
+                                this.root.focusNextInput(this);
+                            }
+                        },
+                        panelType: "Button",
+                        init: function() {
+                            this.root.controls.push(this);
+                        },
+                        cssClasses: ["btn"],
+                        children: [{
+                            cssClasses: [],
+                            panelType: "Label",
+                            init: function() {
+                                this.text($.Localize("cancel"));
+                            },
+                            skipBindHandlers: true
+                        }]
+                    }]
+                }
+            ]
+        }]
+    });
+}

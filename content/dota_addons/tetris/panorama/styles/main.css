@@ -138,7 +138,48 @@ Label {
     border-top-color: white;
     border-left-color: white;
 }
-
+.btn {
+    background-color: gradient( linear, 0% 0%, 0% 100%, from( #333333), to( #444444));
+    height: 36px;
+    width: 140px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-left: 3px;
+    margin-right: 3px;
+    border-style: solid;
+    border-width: 1px;
+    border-top-color: #444444;
+    border-left-color: #494949;
+    border-bottom-color: #111111;
+    border-right-color: #404040;
+    transition-property: background-color;
+    transition-duration: 0.15s;
+    transition-timing-function: linear;
+}
+.btn Label {
+    font-weight: thin;
+    vertical-align: middle;
+    text-transform: none;
+    letter-spacing: 0px;
+    horizontal-align: middle;
+    margin-left: 0%;
+    margin-top: 2px;
+    font-size: 20;
+    color: #888888;
+    letter-spacing: 1px;
+    text-align: center;
+    min-width: 100%;
+}
+.btn:hover {
+    background-color: gradient( linear, 0% 0%, 0% 100%, from( #444444), to( #555555));
+}
+.btn:active {
+    background-color: gradient( linear, 0% 0%, 0% 100%, from( #888888), to( #aaaaaa));
+    pre-transform-scale2d: 1.02;
+}
+.btn:selected {
+    background-color: gradient( linear, 0% 0%, 0% 100%, from( #777777), to( #999999));
+}
 .btn:active {
     border-top-color: #757575;
     border-left-color: #757575;
