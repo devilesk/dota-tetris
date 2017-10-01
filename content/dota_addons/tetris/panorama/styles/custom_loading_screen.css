@@ -15,6 +15,7 @@
 #DescriptionPanel {
     margin-top: 35px;
     font-size: 24px;
+    flow-children: down;
 }
 
 #AddonTitle {

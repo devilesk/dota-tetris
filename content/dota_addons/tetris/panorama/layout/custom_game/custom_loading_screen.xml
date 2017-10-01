@@ -11,7 +11,12 @@
                 <Label id="AddonTitle" class="label-text" text="#addon_game_name" />
             </Panel>
             <Panel id="DescriptionPanel" class="text-panel">
-                <Label html="true" id="DescriptionText" class="label-text" text="#LoadingScreenDescriptionText" />
+                <Label html="true" class="label-text" text="#hotkey_up_arrow" />
+                <Label html="true" class="label-text" text="#hotkey_z" />
+                <Label html="true" class="label-text" text="#hotkey_down_arrow" />
+                <Label html="true" class="label-text" text="#hotkey_space" />
+                <Label html="true" class="label-text" text="#hotkey_lshift" />
+                <Label html="true" class="label-text" text="#hotkey_leftright_arrow" />
             </Panel>
         </Panel>
     </Panel>
