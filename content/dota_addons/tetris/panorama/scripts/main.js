@@ -165,7 +165,7 @@ function HotkeyPrompt() {
                             cssClasses: [],
                             panelType: "Label",
                             init: function() {
-                                this.text("Up Arrow - Rotate Clockwise");
+                                this.text($.Localize("hotkey_up_arrow"));
                             },
                             skipBindHandlers: true
                         }]
@@ -183,7 +183,7 @@ function HotkeyPrompt() {
                             cssClasses: [],
                             panelType: "Label",
                             init: function() {
-                                this.text("Z - Rotate Counter-Clockwise");
+                                this.text($.Localize("hotkey_z"));
                             },
                             skipBindHandlers: true
                         }]
@@ -201,7 +201,7 @@ function HotkeyPrompt() {
                             cssClasses: [],
                             panelType: "Label",
                             init: function() {
-                                this.text("Down Arrow - Soft Drop");
+                                this.text($.Localize("hotkey_down_arrow"));
                             },
                             skipBindHandlers: true
                         }]
@@ -219,7 +219,7 @@ function HotkeyPrompt() {
                             cssClasses: [],
                             panelType: "Label",
                             init: function() {
-                                this.text("Space - Hard Drop");
+                                this.text($.Localize("hotkey_space"));
                             },
                             skipBindHandlers: true
                         }]
@@ -237,7 +237,7 @@ function HotkeyPrompt() {
                             cssClasses: [],
                             panelType: "Label",
                             init: function() {
-                                this.text("Left Shift - Hold/Swap Piece");
+                                this.text($.Localize("hotkey_lshift"));
                             },
                             skipBindHandlers: true
                         }]
@@ -255,7 +255,7 @@ function HotkeyPrompt() {
                             cssClasses: [],
                             panelType: "Label",
                             init: function() {
-                                this.text("Left/Right Arrow - Move Left/Right");
+                                this.text($.Localize("hotkey_leftright_arrow"));
                             },
                             skipBindHandlers: true
                         }]

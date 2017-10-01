@@ -31,4 +31,10 @@
     "b2b_tspin_triple"                              "BACK TO BACK T-SPIN TRIPLE"
     "game_over"                                     "GAME OVER"
     "level_up"                                      "LEVEL UP"
+    "hotkey_up_arrow"                               "Up Arrow - Rotate Clockwise"
+    "hotkey_z"                                      "Z - Rotate Counter-Clockwise"
+    "hotkey_down_arrow"                             "Down Arrow - Soft Drop"
+    "hotkey_space"                                  "Space - Hard Drop"
+    "hotkey_lshift"                                 "Left Shift - Hold/Swap Piece"
+    "hotkey_leftright_arrow"                        "Left/Right Arrow - Move Left/Right"
 }
