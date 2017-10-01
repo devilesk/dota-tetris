@@ -80,3 +80,14 @@
     transform: scaleX(1) scaleY(1);
   }
 }
+
+.notification
+{
+    color: white;
+    vertical-align: center;
+    horizontal-align: center;
+    text-shadow: 4px 4px 4px #121212;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+}

@@ -122,7 +122,7 @@ function TETRIS:Spawn()
 end
 
 function TETRIS:EndGame()
-    Notifications:TopToAll({text="#game_over", duration=5})
+    Notifications:TopToAll({text="#game_over", duration=5, class="notification"})
     self:ClearTimers()
 end
 
@@ -145,7 +145,7 @@ function TETRIS:PreStart(gameMode)
     self.startCountdown = 3
     self.startTimer = Timers:CreateTimer(1, function ()
         if self.startCountdown > 0 then
-            Notifications:TopToAll({text=tostring(self.startCountdown), duration=1})
+            Notifications:TopToAll({text=tostring(self.startCountdown), duration=1, class="notification"})
             self.startCountdown = self.startCountdown - 1
             return 1
         else

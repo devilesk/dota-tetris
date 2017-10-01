@@ -8,26 +8,26 @@ function TETRIS:CalculateScore()
         if self.linesCleared == 1 then
             value = 100 * self.level
             self.lastAction = TETRIS.ACTION.SINGLE
-            Notifications:TopToAll({text="#single", duration=0.5})
+            Notifications:TopToAll({text="#single", duration=0.5, class="notification"})
         -- double
         elseif self.linesCleared == 2 then
             value = 300 * self.level
             self.lastAction = TETRIS.ACTION.DOUBLE
-            Notifications:TopToAll({text="#double", duration=0.5})
+            Notifications:TopToAll({text="#double", duration=0.5, class="notification"})
         -- triple
         elseif self.linesCleared == 3 then
             value = 500 * self.level
             self.lastAction = TETRIS.ACTION.TRIPLE
-            Notifications:TopToAll({text="#triple", duration=0.5})
+            Notifications:TopToAll({text="#triple", duration=0.5, class="notification"})
         -- tetris
         elseif self.linesCleared == 4 then
             -- back to back
             if self.lastAction == TETRIS.ACTION.TETRIS then
                 value = 1200 * self.level
-                Notifications:TopToAll({text="#b2b_tetris", duration=0.5})
+                Notifications:TopToAll({text="#b2b_tetris", duration=0.5, class="notification"})
             else
                 value = 500 * self.level
-                Notifications:TopToAll({text="#tetris", duration=0.5})
+                Notifications:TopToAll({text="#tetris", duration=0.5, class="notification"})
             end
             self.lastAction = TETRIS.ACTION.TETRIS
         end
@@ -35,26 +35,26 @@ function TETRIS:CalculateScore()
         -- tspin mini
         if self.linesCleared == 0 then
             self.lastAction = TETRIS.ACTION.TSPIN_MINI
-            Notifications:TopToAll({text="#tspin_mini", duration=0.5})
+            Notifications:TopToAll({text="#tspin_mini", duration=0.5, class="notification"})
         -- tspin mini single
         elseif self.linesCleared == 1 then
             value = 100 * self.level
             self.lastAction = TETRIS.ACTION.TSPIN_MINI_SINGLE
-            Notifications:TopToAll({text="#tspin_mini_single", duration=0.5})
+            Notifications:TopToAll({text="#tspin_mini_single", duration=0.5, class="notification"})
         -- tspin mini double
         elseif self.linesCleared == 2 then
             value = 300 * self.level
             self.lastAction = TETRIS.ACTION.TSPIN_MINI_DOUBLE
-            Notifications:TopToAll({text="#tspin_mini_double", duration=0.5})
+            Notifications:TopToAll({text="#tspin_mini_double", duration=0.5, class="notification"})
         -- tspin triple
         elseif self.linesCleared == 3 then
             -- back to back
             if self.lastAction == TETRIS.ACTION.TSPIN_TRIPLE then
                 value = 2400 * self.level
-                Notifications:TopToAll({text="#b2b_tspin_triple", duration=0.5})
+                Notifications:TopToAll({text="#b2b_tspin_triple", duration=0.5, class="notification"})
             else
                 value = 1600 * self.level
-                Notifications:TopToAll({text="#tspin_triple", duration=0.5})
+                Notifications:TopToAll({text="#tspin_triple", duration=0.5, class="notification"})
             end
             self.lastAction = TETRIS.ACTION.TSPIN_TRIPLE
         end
@@ -63,20 +63,20 @@ function TETRIS:CalculateScore()
         if self.linesCleared == 0 then
             value = 400 * self.level
             self.lastAction = TETRIS.ACTION.TSPIN
-            Notifications:TopToAll({text="#tspin", duration=0.5})
+            Notifications:TopToAll({text="#tspin", duration=0.5, class="notification"})
         elseif self.linesCleared == 1 then
             value = 800 * self.level
             self.lastAction = TETRIS.ACTION.TSPIN_SINGLE
-            Notifications:TopToAll({text="#tspin_single", duration=0.5})
+            Notifications:TopToAll({text="#tspin_single", duration=0.5, class="notification"})
         -- tspin double
         elseif self.linesCleared == 2 then
             -- back to back
             if self.lastAction == TETRIS.ACTION.TSPIN_DOUBLE then
                 value = 1800 * self.level
-                Notifications:TopToAll({text="#b2b_tspin_double", duration=0.5})
+                Notifications:TopToAll({text="#b2b_tspin_double", duration=0.5, class="notification"})
             else
                 value = 1200 * self.level
-                Notifications:TopToAll({text="#tspin_double", duration=0.5})
+                Notifications:TopToAll({text="#tspin_double", duration=0.5, class="notification"})
             end
             self.lastAction = TETRIS.ACTION.TSPIN_DOUBLE
         -- tspin triple
@@ -84,10 +84,10 @@ function TETRIS:CalculateScore()
             -- back to back
             if self.lastAction == TETRIS.ACTION.TSPIN_TRIPLE then
                 value = 2400 * self.level
-                Notifications:TopToAll({text="#b2b_tspin_triple", duration=0.5})
+                Notifications:TopToAll({text="#b2b_tspin_triple", duration=0.5, class="notification"})
             else
                 value = 1600 * self.level
-                Notifications:TopToAll({text="#tspin_triple", duration=0.5})
+                Notifications:TopToAll({text="#tspin_triple", duration=0.5, class="notification"})
             end
             self.lastAction = TETRIS.ACTION.TSPIN_TRIPLE
         end
@@ -95,7 +95,7 @@ function TETRIS:CalculateScore()
     
     if value > 0 then
         self.score = self.score + value
-        Notifications:TopToAll({text="+" .. tostring(value), duration=0.5})
+        Notifications:TopToAll({text="+" .. tostring(value), duration=0.5, class="notification"})
     end
 
     if self.linesCleared > 0 then
@@ -103,7 +103,7 @@ function TETRIS:CalculateScore()
     
         if self.lineClearCombo > 1 then
             self.score = self.score + 50 * (self.lineClearCombo - 1) * self.level
-            Notifications:TopToAll({text="x" .. tostring(self.lineClearCombo - 1), duration=0.5})
+            Notifications:TopToAll({text="x" .. tostring(self.lineClearCombo - 1), duration=0.5, class="notification"})
         end
     end
     
@@ -111,7 +111,7 @@ function TETRIS:CalculateScore()
     if self.linesToNextLevel >= self.linesPerLevel then
         self.linesToNextLevel = self.linesToNextLevel - self.linesPerLevel
         self.level = math.min(self.maxLevel, self.level + 1)
-        Notifications:TopToAll({text="#level_up", duration=1})
+        Notifications:TopToAll({text="#level_up", duration=1, class="notification"})
         EmitGlobalSound("General.FemaleLevelUp")
     end
     
